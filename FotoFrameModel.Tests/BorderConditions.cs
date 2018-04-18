@@ -19,10 +19,10 @@ namespace Tests
             _parameter = new BorderConditions(_min, _value, _max);
         }
 
-        [Test(Description = "BorderConditions constructor test")]
-        [TestCase(_min, _value, _max)]
-        [TestCase(_min + 10, _value + 10, _max + 10)]
-        public void BorderConditionsConstructorTest(double min, double value, double max)
+        [Test(Description = "BorderConditions constructor test positive")]
+        [TestCase(_min, _value, _max, Description = "Min < Value < Max")]
+        [TestCase(_max, _max, _max, Description = "Min = Value = Max")]
+        public void PositiveBorderConditionsConstructorTest(double min, double value, double max)
         {
             var parameter = new BorderConditions(min, value, max);
 
@@ -33,6 +33,17 @@ namespace Tests
                 Assert.AreEqual(max, parameter.Max);
             });
         }
+
+        [Test(Description = "BorderConditions constructor test negative")]
+        [TestCase(_max, _value, _min, Description = " Max < Min")]
+        [TestCase(_min, _min * 2, _max, Description = "Value < Min")]
+        [TestCase(_min, _max * 2, _max, Description = "Value > Max")]
+        public void NegativeBorderConditionsConstructorTest(double min, double value, double max)
+        {
+            BorderConditions parameter;
+            Assert.Throws<ArgumentException>(() => parameter = new BorderConditions(min, value, max));
+        }
+
 
         [Test(Description = "Set value great than max value")]
         [TestCase(_max * 2, Description = "Max < Value")]

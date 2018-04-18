@@ -61,39 +61,50 @@ namespace FotoFrameModel
         /// <param name="max">Максимальное значение</param>
         public BorderConditions(double min, double value, double max)
         {
-            _minimum = min;
-            _value = value;
-            _maximum = max;
+            if(min > max)
+            {
+                var msg = $"Минимальное значение = {min} " +
+                    $"больше максимального = {max}";
+                throw new ArgumentException(msg, nameof(min));
+            }
+
+            Min = min;
+            Max = max;
+            Value = value;
         }
 
         public double Max
         {
             get => _maximum;
-            private set => _maximum = value;
+            private set
+            {
+                _maximum = value;
+            }
         }
         public double Min
         {
             get => _minimum;
-            private set => _minimum = value;
+            private set
+            {
+                _minimum = value;
+            }
         }
         public double Value
         {
             get => _value;
             set
             {
-                if(value > Max)
+                if (value > Max)
                 {
-                    var msg = String.Format(
-                        $"Заданное значение = {value} больше," +
-                        $" чем максимальное значение = {Max}");
+                    var msg = $"Заданное значение = {value} больше," +
+                        $" чем максимальное значение = {Max}";
                     throw new ArgumentException(msg, nameof(Value));
                 }
 
                 if (value < Min)
                 {
-                    var msg = String.Format(
-                        $"Заданное значение = {value} меньше," +
-                        $" чем минимальное значение = {Max}");
+                    var msg = $"Заданное значение = {value} меньше," +
+                        $" чем минимальное значение = {Max}";
                     throw new ArgumentException(msg, nameof(Value));
                 }
 
