@@ -79,7 +79,26 @@ namespace FotoFrameModel
         public double Value
         {
             get => _value;
-            set => _value = value;
+            set
+            {
+                if(value > Max)
+                {
+                    var msg = String.Format(
+                        $"Заданное значение = {value} больше," +
+                        $" чем максимальное значение = {Max}");
+                    throw new ArgumentException(msg, nameof(Value));
+                }
+
+                if (value < Min)
+                {
+                    var msg = String.Format(
+                        $"Заданное значение = {value} меньше," +
+                        $" чем минимальное значение = {Max}");
+                    throw new ArgumentException(msg, nameof(Value));
+                }
+
+                _value = value;
+            }
         }
     }
 }

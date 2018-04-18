@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using FotoFrameModel;
+using System;
 
 namespace Tests
 {
@@ -33,6 +34,28 @@ namespace Tests
             });
         }
 
+        [Test(Description = "Set value great than max value")]
+        [TestCase(_max * 2, Description = "Max < Value")]
+        public void SetGreatValueThanMax(double value)
+        {
+            Assert.Throws<ArgumentException>(() => _parameter.Value = value);
+        }
 
+        [Test(Description = "Set value less than min value")]
+        [TestCase(_min * 2, Description = "Min > Value")]
+        public void SetLessValueThanMin(double value)
+        {
+            Assert.Throws<ArgumentException>(() => _parameter.Value = value);
+        }
+
+        [Test(Description = "Set a value within the range")]
+        [TestCase((_min + _max) / 2, Description = "Min < Value < Max")]
+        [TestCase(_min, Description = "Value = Min")]
+        [TestCase(_max, Description = "Value = Max")]
+        public void SetValueWithinRange(double value)
+        {
+            _parameter.Value = value;
+            Assert.AreEqual(value, _parameter.Value);
+        }
     }
 }
