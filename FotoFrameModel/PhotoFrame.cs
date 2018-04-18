@@ -45,7 +45,7 @@ namespace FotoFrameModel
         public bool IsValid => throw new NotImplementedException();
     }
 
-    
+
     public class BorderConditions
     {
         private double _minimum = 0.0f;
@@ -54,11 +54,25 @@ namespace FotoFrameModel
 
         public BorderConditions(double min, double value, double max)
         {
-            throw new NotImplementedException();
+            _minimum = min;
+            _value = value;
+            _maximum = max;
         }
 
-        public double Max { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double Min { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double Value { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double Max
+        {
+            get => _maximum;
+            private set => _maximum = value;
+        }
+        public double Min
+        {
+            get => _minimum;
+            private set => _minimum = value;
+        }
+        public double Value
+        {
+            get => _value;
+            set => _value = value;
+        }
     }
 }
