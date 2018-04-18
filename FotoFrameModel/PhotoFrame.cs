@@ -45,13 +45,14 @@ namespace FotoFrameModel
         public bool IsValid => throw new NotImplementedException();
     }
 
-
+    /// <summary>
+    /// Диапазон допустимых значений параметра
+    /// </summary>
     public class BorderConditions
     {
         private double _minimum = 0.0f;
         private double _maximum = 0.0f;
         private double _value = 0.0f;
-
 
         /// <summary>
         /// Установление граничных условий для значения
@@ -73,6 +74,9 @@ namespace FotoFrameModel
             Value = value;
         }
 
+        /// <summary>
+        /// Максимальное значение диапазона
+        /// </summary>
         public double Max
         {
             get => _maximum;
@@ -81,6 +85,10 @@ namespace FotoFrameModel
                 _maximum = value;
             }
         }
+
+        /// <summary>
+        /// Минимальное значение диапазона
+        /// </summary>
         public double Min
         {
             get => _minimum;
@@ -89,6 +97,10 @@ namespace FotoFrameModel
                 _minimum = value;
             }
         }
+
+        /// <summary>
+        /// Значение, входящее в диапазон
+        /// </summary>
         public double Value
         {
             get => _value;
