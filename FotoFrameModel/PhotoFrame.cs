@@ -52,6 +52,13 @@ namespace FotoFrameModel
         private double _maximum = 0.0f;
         private double _value = 0.0f;
 
+
+        /// <summary>
+        /// Установление граничных условий для значения
+        /// </summary>
+        /// <param name="min">Минимальное значение</param>
+        /// <param name="value">Текущее значение</param>
+        /// <param name="max">Максимальное значение</param>
         public BorderConditions(double min, double value, double max)
         {
             _minimum = min;
