@@ -22,25 +22,85 @@ namespace FotoFrameModel
 
     public class PhotoFrameTemplate : IPhotoFrame, IChecker
     {
+        private BorderConditions _outerWidth;
+        private BorderConditions _outerHeight;
+        private BorderConditions _outerLength;
+        private BorderConditions _innerHeight;
+        private BorderConditions _interval;
+
         public PhotoFrameTemplate(
             BorderConditions outerWidth,
             BorderConditions outerHeight,
             BorderConditions outerLength,
-            BorderConditions InnerHeight,
-            BorderConditions Interval)
+            BorderConditions innerHeight,
+            BorderConditions interval)
         {
-            throw new NotImplementedException();
+            _outerWidth = outerWidth;
+            _outerHeight = outerHeight;
+            _outerLength = outerLength;
+            _innerHeight = innerHeight;
+            _interval = interval;
         }
 
-        public double OuterWidth { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double OuterHeight { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double OuterLength { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double InnerHeight { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double Interval { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double OuterWidth
+        {
+            get
+            {
+                return _outerWidth.Value;
+            }
+            set
+            {
+                _outerWidth.Value = value;
+            }
+        }
+        public double OuterHeight
+        {
+            get
+            {
+                return _outerHeight.Value;
+            }
+            set
+            {
+                _outerHeight.Value = value;
+            }
+        }
+        public double OuterLength
+        {
+            get
+            {
+                return _outerLength.Value;
+            }
+            set
+            {
+                _outerLength.Value = value;
+            }
+        }
+        public double InnerHeight
+        {
+            get
+            {
+                return _innerHeight.Value;
+            }
+            set
+            {
+                _innerHeight.Value = value;
+            }
+        }
+        public double Interval
+        {
+            get
+            {
+                return _interval.Value;
+            }
+            set
+            {
+                _interval.Value = value;
+            }
+        }
 
-        public double InnerWidth => throw new NotImplementedException();
+        public double InnerWidth => OuterWidth - Interval * 2;
 
-        public double InnerLength => throw new NotImplementedException();
+        public double InnerLength => OuterLength - Interval * 2;
 
         public bool IsValid => throw new NotImplementedException();
     }
@@ -62,7 +122,7 @@ namespace FotoFrameModel
         /// <param name="max">Максимальное значение</param>
         public BorderConditions(double min, double value, double max)
         {
-            if(min > max)
+            if (min > max)
             {
                 var msg = $"Минимальное значение = {min} " +
                     $"больше максимального = {max}";
