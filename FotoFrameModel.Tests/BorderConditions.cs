@@ -60,7 +60,7 @@ namespace Tests
         }
 
         [Test(Description = "Set a value within the range")]
-        [TestCase((_min + _max) / 2, TestName = "Min < Value < Max")]
+        [TestCase((_min + _max) / 2, TestName = "Min < Avg value < Max")]
         [TestCase(_min, TestName = "Value = Min")]
         [TestCase(_max, TestName = "Value = Max")]
         public void SetValueWithinRange(double value)

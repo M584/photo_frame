@@ -70,10 +70,7 @@ namespace FotoFrameModel.Tests
                 " interval = MinValue")]
         [TestCase(_minForLengthAndWidth, _minHeight,
             TestName = "Inner length > outerLength," +
-                " outerLength = min")]
-        [TestCase(_max, _minHeight,
-            TestName = "Inner length > outerLength," +
-                " outerLength = max")]
+                " outerLength = min, interval = min")]
         [TestCase(_minForLengthAndWidth, (_minHeight + _maxInterval) / 2.0f,
             TestName = "Inner length > outerLength," +
                 " outerLength = min, interval = average value")]
