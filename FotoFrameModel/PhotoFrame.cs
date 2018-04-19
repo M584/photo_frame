@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FotoFrameModel
 {
@@ -28,6 +29,9 @@ namespace FotoFrameModel
         private BorderConditions _innerHeight;
         private BorderConditions _interval;
 
+        private delegate double SetValue(double value);
+        private Dictionary<string, SetValue> _methodsCheck;
+
         public PhotoFrameTemplate(
             BorderConditions outerWidth,
             BorderConditions outerHeight,
@@ -40,7 +44,20 @@ namespace FotoFrameModel
             _outerLength = outerLength;
             _innerHeight = innerHeight;
             _interval = interval;
-            IsValid = true;
+
+            _methodsCheck = new Dictionary<string, SetValue>
+            {
+                {nameof(this.OuterHeight),
+                    (double value) => this.OuterHeight = value },
+                {nameof(this.OuterWidth),
+                    (double value) => this.OuterWidth = value },
+                {nameof(this.OuterLength),
+                    (double value) => this.OuterLength = value },
+                {nameof(this.InnerHeight),
+                    (double value) => this.InnerHeight = value },
+                {nameof(this.Interval),
+                    (double value) => this.Interval = value },
+            };
         }
 
         public double OuterWidth
@@ -51,16 +68,7 @@ namespace FotoFrameModel
             }
             set
             {
-                try
-                {
-                    _outerWidth.Value = value;
-                }
-                catch (ArgumentException ex)
-                {
-                    IsValid = false;
-                    throw ex;
-                }
-                IsValid = true;
+                _outerWidth.Value = value;
             }
         }
         public double OuterHeight
@@ -71,16 +79,7 @@ namespace FotoFrameModel
             }
             set
             {
-                try
-                {
-                    _outerHeight.Value = value;
-                }
-                catch (ArgumentException ex)
-                {
-                    IsValid = false;
-                    throw ex;
-                }
-                IsValid = true;
+                _outerHeight.Value = value;
             }
         }
         public double OuterLength
@@ -91,16 +90,7 @@ namespace FotoFrameModel
             }
             set
             {
-                try
-                {
-                    _outerLength.Value = value;
-                }
-                catch(ArgumentException ex)
-                {
-                    IsValid = false;
-                    throw ex;
-                }
-                IsValid = true;
+                _outerLength.Value = value;
             }
         }
         public double InnerHeight
@@ -122,19 +112,65 @@ namespace FotoFrameModel
             }
             set
             {
-                try
-                {
-                    _interval.Value = value;
-                }
-                catch (ArgumentException ex)
-                {
-                    IsValid = false;
-                    throw ex;
-                }
-                IsValid = true;
+                _interval.Value = value;
             }
         }
 
+
+        private Dictionary<string, bool> _isValidParams =
+            new Dictionary<string, bool>();
+
+        public string ValidateParameter(string paramName, double value)
+        {
+            var result = String.Empty;
+
+            if (_methodsCheck.ContainsKey(paramName))
+            {
+                try
+                {
+                    _methodsCheck[paramName](value);
+                }
+                catch (Exception ex)
+                    when (ex is ArgumentException
+                        || ex is ArgumentOutOfRangeException)
+                {
+                    result = ex.Message;
+                }
+                if (_isValidParams.ContainsKey(paramName) == false)
+                {
+                    _isValidParams.Add(paramName, true);
+                }
+                _isValidParams[paramName] =
+                    (result == String.Empty) ? true : false;
+            }
+
+            return result;
+        }
+
+        public bool IsValid
+        {
+            get
+            {
+                var valid = true;
+                try
+                {
+                    var iLength = InnerLength;
+                    var iWidth = InnerWidth;
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    valid = false;
+                    return valid;
+                }
+
+                foreach (var p in _isValidParams)
+                {
+                    valid = p.Value;
+                    if (valid == false) break;
+                }
+                return valid;
+            }
+        }
 
         /// <summary>
         /// Вычисляет значение внутренних параметров:
@@ -185,11 +221,6 @@ namespace FotoFrameModel
                 return CalcInnerParam(OuterLength,
                     nameof(OuterLength), "высоты");
             }
-        }
-
-        public bool IsValid
-        {
-            get; set;
         }
     }
 

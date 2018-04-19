@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using FotoFrameModel;
+using System.Collections.Generic;
 using System;
 
 namespace FotoFrameModel.Tests
@@ -24,7 +25,7 @@ namespace FotoFrameModel.Tests
                 _value, _minForLengthAndWidth);
             var outerLength = new BorderConditions(_minForLengthAndWidth,
                 _max, _max);
-            var innerHeight = new BorderConditions(_minHeight, 
+            var innerHeight = new BorderConditions(_minHeight,
                 _value, _minForLengthAndWidth);
             var interval = new BorderConditions(_minHeight,
                 _value, _maxInterval);
@@ -42,9 +43,9 @@ namespace FotoFrameModel.Tests
         {
             var template = _photoFrame;
 
-            var innerWidth = CalcInnerWidth(template.OuterWidth, 
+            var innerWidth = CalcInnerWidth(template.OuterWidth,
                 template.Interval);
-            var innerLength = CalcInnerLength(template.OuterLength, 
+            var innerLength = CalcInnerLength(template.OuterLength,
                 template.Interval);
 
             Assert.Multiple(() =>
@@ -82,7 +83,7 @@ namespace FotoFrameModel.Tests
         [TestCase(_minForLengthAndWidth, (_minHeight + _maxInterval) / 2.0f,
             TestName = "Inner length > outerLength," +
                 " outerLength = min, interval = average value")]
-        public void InnerLengthTestPositive(double outerLength, 
+        public void InnerLengthTestPositive(double outerLength,
             double interval)
         {
             _photoFrame.OuterLength = outerLength;
@@ -163,23 +164,50 @@ namespace FotoFrameModel.Tests
             });
         }
 
-        [Test(Description = "Validation photo frame template test")]
-        [TestCase(10, 10, 1, true, TestName = "Valid params")]
-        [TestCase(10, 10, 10, false, TestName = "Wrong interval")]
-        [TestCase(-10, 10, 1, false, TestName = "Wrong outer width")]
-        [TestCase(10, -10, 1, false, TestName = "Wrong outer length")]
-        [TestCase(10, -10, 0, false, TestName = "Zero interval")]
-        public void IsValidTestPositive(double outerWidth,
-            double outerLength, double interval, bool expected)
-        {
-            try
-            {
-                _photoFrame.OuterWidth = outerWidth;
-                _photoFrame.OuterLength = outerLength;
-                _photoFrame.Interval = interval;
-            }
-            catch (ArgumentException ex) { }
+        public delegate double SetValue(double value);
 
+        [Test(Description = "Validation photo frame template test")]
+        [TestCase(10, 10, 1, 10, 10, true, TestName = "Valid params")]
+        [TestCase(0, 0, 0, 0, 0, false, TestName = "Wrong interval")]
+        [TestCase(-10, 10, 1, 10, 10, false, TestName = "Wrong outer width")]
+        [TestCase(10, -10, 1, 10, 10, false, TestName = "Wrong outer length")]
+        [TestCase(10, 10, 1, 0, 10, false, TestName = "Wrong outer height")]
+        [TestCase(10, 10, 1, 10, 0, false, TestName = "Wrong inner height")]
+        public void IsValidAndValidateParameterTest(double outerWidth,
+            double outerLength, double interval, double outerHeight,
+                double innerHeight, bool expected)
+        {
+            var frameParams = new List<Tuple<string, double, SetValue>>
+            {
+                new Tuple<string, double, SetValue>(
+                    nameof(_photoFrame.OuterWidth), outerWidth,
+                        ((double value) => _photoFrame.OuterWidth = value)),
+                new Tuple<string, double, SetValue>(
+                    nameof(_photoFrame.OuterLength), outerLength,
+                        ((double value) => _photoFrame.OuterLength = value)),
+                new Tuple<string, double, SetValue>(
+                    nameof(_photoFrame.Interval), interval,
+                        ((double value) => _photoFrame.Interval = value)),
+                new Tuple<string, double, SetValue>(
+                    nameof(_photoFrame.OuterHeight), outerHeight,
+                        ((double value) => _photoFrame.OuterHeight = value)),
+                new Tuple<string, double, SetValue>(
+                    nameof(_photoFrame.InnerHeight), innerHeight,
+                        ((double value) => _photoFrame.InnerHeight = value))
+            };
+
+            foreach (var p in frameParams)
+            {
+                try
+                {
+                    _photoFrame.ValidateParameter(p.Item1, p.Item2);
+                    p.Item3(p.Item2);
+                }
+                catch (Exception ex)
+                   when (ex is ArgumentException
+                       || ex is ArgumentOutOfRangeException)
+                { }
+            }
             Assert.AreEqual(expected, _photoFrame.IsValid);
         }
     }
