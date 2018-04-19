@@ -13,6 +13,9 @@ namespace FotoFrameModel.Tests
         private const double _max = 100.0f;
         private const double _maxInterval = 6.0f;
         private const double _value = 5.0f;
+        private const double _smallest = _minHeight - 1000.0f;
+        private const double _biggest = _max + 1000.0f;
+        private const double _norm = _minForLengthAndWidth;
 
         private PhotoFrameTemplate _photoFrame;
 
@@ -166,13 +169,44 @@ namespace FotoFrameModel.Tests
 
         public delegate double SetValue(double value);
 
+        //Так как данный тест позволяет проверить
+        //  корректность работы задаваемых свойств
+        //  класса PhotoFrameTemplate, то отпадает
+        //  надобность выделять для задаваемых свойств
+        //  свои тесты. 
+        //Корректность работы задаваемых свойств
+        //  проверена с помощью разнообразных тестовых случаев для них.
         [Test(Description = "Validation photo frame template test")]
-        [TestCase(10, 10, 1, 10, 10, true, TestName = "Valid params")]
-        [TestCase(0, 0, 0, 0, 0, false, TestName = "Wrong interval")]
-        [TestCase(-10, 10, 1, 10, 10, false, TestName = "Wrong outer width")]
-        [TestCase(10, -10, 1, 10, 10, false, TestName = "Wrong outer length")]
-        [TestCase(10, 10, 1, 0, 10, false, TestName = "Wrong outer height")]
-        [TestCase(10, 10, 1, 10, 0, false, TestName = "Wrong inner height")]
+        [TestCase(_norm, _norm, 1, _norm, _norm, true, 
+            TestName = "Valid params")]
+        [TestCase(0, 0, 0, 0, 0, false, 
+            TestName = "Wrong params")]
+        [TestCase(_smallest, _norm, 1, _norm, _norm, false, 
+            TestName = "Outer width < min")]
+        [TestCase(_biggest, _norm, 1, _norm, _norm, false, 
+            TestName = "Outer width > max")]
+        [TestCase(_norm, _smallest, 1, _norm, _norm, false, 
+            TestName = "Outer length < min")]
+        [TestCase(_norm, _biggest, 1, _norm, _norm, false,
+            TestName = "Outer length > max")]
+        [TestCase(_norm, _norm, 1, _smallest, _norm, false,
+            TestName = "Outer height < min")]
+        [TestCase(_norm, _norm, 1, _biggest, _norm, false,
+            TestName = "Outer height > max")]
+        [TestCase(_norm, _norm, _smallest, _norm, _norm, false,
+            TestName = "Interval < min")]
+        [TestCase(_norm, _norm, _biggest, _norm, _norm, false,
+            TestName = "Interval > max")]
+        [TestCase(_norm, _norm, 1, _norm, _smallest, false,
+            TestName = "Inner height < min")]
+        [TestCase(_norm, _norm, 1, _norm, _biggest, false,
+            TestName = "Inner height > max")]
+        [TestCase(_norm, _max, _maxInterval, _norm, _norm, false,
+            TestName = "Inner width is wrong," +
+                "outer width less than 2x interval")]
+        [TestCase(_max, _norm, _maxInterval, _norm, _norm, false,
+            TestName = "Inner length is wrong," +
+                " outer length less than 2x interval")]
         public void IsValidAndValidateParameterTest(double outerWidth,
             double outerLength, double interval, double outerHeight,
                 double innerHeight, bool expected)
