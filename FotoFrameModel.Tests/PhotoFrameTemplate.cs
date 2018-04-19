@@ -62,8 +62,8 @@ namespace FotoFrameModel.Tests
         }
 
         [Test(Description = "Inner length less than outer length")]
-        [TestCase(20, _maxInterval)]
-        [TestCase(15, _minHeight)]
+        [TestCase(20, _maxInterval, TestName = "interval = MaxValue")]
+        [TestCase(15, _minHeight, TestName = "interval = MinValue")]
         public void InnerLengthLessOuterLength(double outerLength, double interval)
         {
             _photoFrame.OuterLength = outerLength;
