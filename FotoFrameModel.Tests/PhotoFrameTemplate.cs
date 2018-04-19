@@ -207,6 +207,8 @@ namespace FotoFrameModel.Tests
         [TestCase(_max, _norm, _maxInterval, _norm, _norm, false,
             TestName = "Inner length is wrong," +
                 " outer length less than 2x interval")]
+        [TestCase(_norm, _norm, 1, _norm, _norm + 10.0f, false,
+            TestName = "Outer height < inner height")]
         public void IsValidAndValidateParameterTest(double outerWidth,
             double outerLength, double interval, double outerHeight,
                 double innerHeight, bool expected)
