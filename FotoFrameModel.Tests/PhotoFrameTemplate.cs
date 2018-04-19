@@ -91,7 +91,7 @@ namespace FotoFrameModel.Tests
             var expectedInnerLength = CalcInnerLength(outerLength,
                 interval);
             var cond = _photoFrame.OuterLength > _photoFrame.InnerLength;
-            
+
             Assert.Multiple(() =>
             {
                 Assert.AreEqual(expectedInnerLength,
