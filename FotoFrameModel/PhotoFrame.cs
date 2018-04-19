@@ -110,7 +110,8 @@ namespace FotoFrameModel
                 {
                     var msg = $"Значение внешней длины" +
                         $" должно быть больше " +
-                        $"двойного интервала = {Interval * 2}({Interval}*2)";
+                        $"двойного интервала = {Interval * 2}" +
+                        $"({Interval}*2)";
                     throw new ArgumentOutOfRangeException(
                         nameof(OuterLength), OuterLength, msg);
                 }

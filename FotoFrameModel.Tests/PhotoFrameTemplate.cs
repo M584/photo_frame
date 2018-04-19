@@ -18,11 +18,16 @@ namespace FotoFrameModel.Tests
         [SetUp]
         public void Setup()
         {
-            var outerWidth = new BorderConditions(_minForLengthAndWidth, _max, _max);
-            var outerHeight = new BorderConditions(_minHeight, _value, _minForLengthAndWidth);
-            var outerLength = new BorderConditions(_minForLengthAndWidth, _max, _max);
-            var innerHeight = new BorderConditions(_minHeight, _value, _minForLengthAndWidth);
-            var interval = new BorderConditions(_minHeight, _value, _maxInterval);
+            var outerWidth = new BorderConditions(_minForLengthAndWidth,
+                _max, _max);
+            var outerHeight = new BorderConditions(_minHeight,
+                _value, _minForLengthAndWidth);
+            var outerLength = new BorderConditions(_minForLengthAndWidth,
+                _max, _max);
+            var innerHeight = new BorderConditions(_minHeight, 
+                _value, _minForLengthAndWidth);
+            var interval = new BorderConditions(_minHeight,
+                _value, _maxInterval);
 
             _photoFrame = new PhotoFrameTemplate(outerWidth,
                 outerHeight,
@@ -31,13 +36,16 @@ namespace FotoFrameModel.Tests
                 interval);
         }
 
-        [Test(Description = "PhotoFrameTemlate Constructor Test on requirements domain model")]
+        [Test(Description = "PhotoFrameTemlate Constructor Test" +
+            " on requirements domain model")]
         public void PhotoFrameTemplateConstructorTest()
         {
             var template = _photoFrame;
 
-            var innerWidth = CalcInnerWidth(template.OuterWidth, template.Interval);
-            var innerLength = CalcInnerLength(template.OuterLength, template.Interval);
+            var innerWidth = CalcInnerWidth(template.OuterWidth, 
+                template.Interval);
+            var innerLength = CalcInnerLength(template.OuterLength, 
+                template.Interval);
 
             Assert.Multiple(() =>
             {
@@ -80,7 +88,8 @@ namespace FotoFrameModel.Tests
             _photoFrame.OuterLength = outerLength;
             _photoFrame.Interval = interval;
 
-            var expectedInnerLength = CalcInnerLength(outerLength, interval);
+            var expectedInnerLength = CalcInnerLength(outerLength,
+                interval);
             var cond = _photoFrame.OuterLength > _photoFrame.InnerLength;
             
             Assert.Multiple(() =>

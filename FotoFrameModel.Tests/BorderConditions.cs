@@ -22,7 +22,8 @@ namespace Tests
         [Test(Description = "BorderConditions constructor test positive")]
         [TestCase(_min, _value, _max, TestName = "Min < Value < Max")]
         [TestCase(_max, _max, _max, TestName = "Min = Value = Max")]
-        public void PositiveBorderConditionsConstructorTest(double min, double value, double max)
+        public void PositiveBorderConditionsConstructorTest(double min,
+            double value, double max)
         {
             var parameter = new BorderConditions(min, value, max);
 
@@ -38,10 +39,12 @@ namespace Tests
         [TestCase(_max, _value, _min, TestName = " Max < Min")]
         [TestCase(_min, _min * 2, _max, TestName = "Value < Min")]
         [TestCase(_min, _max * 2, _max, TestName = "Value > Max")]
-        public void NegativeBorderConditionsConstructorTest(double min, double value, double max)
+        public void NegativeBorderConditionsConstructorTest(double min,
+            double value, double max)
         {
             BorderConditions parameter;
-            Assert.Throws<ArgumentException>(() => parameter = new BorderConditions(min, value, max));
+            Assert.Throws<ArgumentException>(() => 
+                parameter = new BorderConditions(min, value, max));
         }
 
 
@@ -49,14 +52,16 @@ namespace Tests
         [TestCase(_max * 2, TestName = "Max < Value")]
         public void SetGreatValueThanMax(double value)
         {
-            Assert.Throws<ArgumentException>(() => _parameter.Value = value);
+            Assert.Throws<ArgumentException>(() => 
+                _parameter.Value = value);
         }
 
         [Test(Description = "Set value less than min value")]
         [TestCase(_min * 2, TestName = "Min > Value")]
         public void SetLessValueThanMin(double value)
         {
-            Assert.Throws<ArgumentException>(() => _parameter.Value = value);
+            Assert.Throws<ArgumentException>(() =>
+                _parameter.Value = value);
         }
 
         [Test(Description = "Set a value within the range")]
