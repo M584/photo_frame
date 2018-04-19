@@ -115,5 +115,52 @@ namespace FotoFrameModel.Tests
                 var t = _photoFrame.InnerLength;
             });
         }
+
+        [Test(Description = "Inner width property test positive")]
+        [TestCase(_max, (_minHeight + _maxInterval) / 2.0f,
+            TestName = "Inner width > outer width," +
+                " interval = average value")]
+        [TestCase(_max, _minHeight,
+            TestName = "Inner width > outer width," +
+                " interval = MinValue")]
+        [TestCase(_minForLengthAndWidth, _minHeight,
+            TestName = "Inner width > outer width," +
+                " outerLength = min, interval = min")]
+        [TestCase(_minForLengthAndWidth, (_minHeight + _maxInterval) / 2.0f,
+            TestName = "Inner width > outer width," +
+                " outerWidth = min, interval = average value")]
+        public void InneWidthTestPositive(double outerWidth,
+            double interval)
+        {
+            _photoFrame.OuterWidth = outerWidth;
+            _photoFrame.Interval = interval;
+
+            var expectedInnerWidth = CalcInnerLength(outerWidth,
+                interval);
+            var cond = _photoFrame.OuterWidth > _photoFrame.InnerWidth;
+
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(expectedInnerWidth,
+                    _photoFrame.InnerWidth);
+                Assert.That(_photoFrame.InnerWidth > 0);
+                Assert.That(cond);
+            });
+        }
+
+        [Test(Description = "Inner width property test negative")]
+        [TestCase(_minForLengthAndWidth, _maxInterval,
+            TestName = "Catch exception out of range inner width")]
+        public void InnerWidthTestNegative(double outerWidth,
+            double interval)
+        {
+            _photoFrame.OuterWidth = outerWidth;
+            _photoFrame.Interval = interval;
+
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var t = _photoFrame.InnerWidth;
+            });
+        }
     }
 }

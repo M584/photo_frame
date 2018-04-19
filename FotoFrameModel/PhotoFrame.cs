@@ -98,7 +98,25 @@ namespace FotoFrameModel
             }
         }
 
-        public double InnerWidth => OuterWidth - Interval * 2;
+        public double InnerWidth
+        {
+            get
+            {
+                var innerWidth = OuterWidth - Interval * 2;
+
+                if (!(innerWidth > 0) || !(OuterWidth > innerWidth))
+                {
+                    var msg = $"Значение внешней ширины" +
+                        $" должно быть больше " +
+                        $"двойного интервала = {Interval * 2}" +
+                        $"({Interval}*2)";
+                    throw new ArgumentOutOfRangeException(
+                        nameof(OuterWidth), OuterWidth, msg);
+                }
+
+                return innerWidth;
+            }
+        }
 
         public double InnerLength
         {
@@ -106,7 +124,7 @@ namespace FotoFrameModel
             {
                 var innerLength = OuterLength - Interval * 2;
 
-                if(!(innerLength > 0) || !(OuterLength > innerLength))
+                if (!(innerLength > 0) || !(OuterLength > innerLength))
                 {
                     var msg = $"Значение внешней длины" +
                         $" должно быть больше " +
