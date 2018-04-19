@@ -98,23 +98,46 @@ namespace FotoFrameModel
             }
         }
 
+
+        /// <summary>
+        /// Вычисляет значение внутренних параметров:
+        ///     ширины или длины
+        /// </summary>
+        /// <param name="outerParam">Значение внешней ширины 
+        ///     или длины</param>
+        /// <param name="outerParamName">Имя внешнего параметра
+        ///     (использовать nameof для получения имени)</param>
+        /// <param name="outerParamLabel">Название внешнего параметра
+        ///     в родительном падеже</param>
+        /// <returns>Посчитанный внутренний параметр:
+        ///     ширина или длина</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Возникает, если нарушена зависимость между
+        ///     внутренним и внешним параметром</exception>
+        private double CalcInnerParam(double outerParam,
+            string outerParamName, string outerParamLabel)
+        {
+            var innerParam = outerParam - Interval * 2;
+
+            if (!(innerParam > 0) || !(outerParam > innerParam))
+            {
+                var msg = $"Значение внешней {outerParamLabel}" +
+                    $" должно быть больше " +
+                    $"двойного интервала = {Interval * 2}" +
+                    $"({Interval}*2)";
+                throw new ArgumentOutOfRangeException(
+                    outerParamName, outerParam, msg);
+            }
+
+            return innerParam;
+        }
+
         public double InnerWidth
         {
             get
             {
-                var innerWidth = OuterWidth - Interval * 2;
-
-                if (!(innerWidth > 0) || !(OuterWidth > innerWidth))
-                {
-                    var msg = $"Значение внешней ширины" +
-                        $" должно быть больше " +
-                        $"двойного интервала = {Interval * 2}" +
-                        $"({Interval}*2)";
-                    throw new ArgumentOutOfRangeException(
-                        nameof(OuterWidth), OuterWidth, msg);
-                }
-
-                return innerWidth;
+                return CalcInnerParam(OuterWidth,
+                    nameof(OuterWidth), "ширины");
             }
         }
 
@@ -122,19 +145,8 @@ namespace FotoFrameModel
         {
             get
             {
-                var innerLength = OuterLength - Interval * 2;
-
-                if (!(innerLength > 0) || !(OuterLength > innerLength))
-                {
-                    var msg = $"Значение внешней длины" +
-                        $" должно быть больше " +
-                        $"двойного интервала = {Interval * 2}" +
-                        $"({Interval}*2)";
-                    throw new ArgumentOutOfRangeException(
-                        nameof(OuterLength), OuterLength, msg);
-                }
-
-                return innerLength;
+                return CalcInnerParam(OuterLength,
+                    nameof(OuterLength), "высоты");
             }
         }
 
