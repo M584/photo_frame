@@ -162,5 +162,25 @@ namespace FotoFrameModel.Tests
                 var t = _photoFrame.InnerWidth;
             });
         }
+
+        [Test(Description = "Validation photo frame template test")]
+        [TestCase(10, 10, 1, true, TestName = "Valid params")]
+        [TestCase(10, 10, 10, false, TestName = "Wrong interval")]
+        [TestCase(-10, 10, 1, false, TestName = "Wrong outer width")]
+        [TestCase(10, -10, 1, false, TestName = "Wrong outer length")]
+        [TestCase(10, -10, 0, false, TestName = "Zero interval")]
+        public void IsValidTestPositive(double outerWidth,
+            double outerLength, double interval, bool expected)
+        {
+            try
+            {
+                _photoFrame.OuterWidth = outerWidth;
+                _photoFrame.OuterLength = outerLength;
+                _photoFrame.Interval = interval;
+            }
+            catch (ArgumentException ex) { }
+
+            Assert.AreEqual(expected, _photoFrame.IsValid);
+        }
     }
 }

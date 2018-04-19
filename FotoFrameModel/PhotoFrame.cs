@@ -40,6 +40,7 @@ namespace FotoFrameModel
             _outerLength = outerLength;
             _innerHeight = innerHeight;
             _interval = interval;
+            IsValid = true;
         }
 
         public double OuterWidth
@@ -50,7 +51,16 @@ namespace FotoFrameModel
             }
             set
             {
-                _outerWidth.Value = value;
+                try
+                {
+                    _outerWidth.Value = value;
+                }
+                catch (ArgumentException ex)
+                {
+                    IsValid = false;
+                    throw ex;
+                }
+                IsValid = true;
             }
         }
         public double OuterHeight
@@ -61,7 +71,16 @@ namespace FotoFrameModel
             }
             set
             {
-                _outerHeight.Value = value;
+                try
+                {
+                    _outerHeight.Value = value;
+                }
+                catch (ArgumentException ex)
+                {
+                    IsValid = false;
+                    throw ex;
+                }
+                IsValid = true;
             }
         }
         public double OuterLength
@@ -72,7 +91,16 @@ namespace FotoFrameModel
             }
             set
             {
-                _outerLength.Value = value;
+                try
+                {
+                    _outerLength.Value = value;
+                }
+                catch(ArgumentException ex)
+                {
+                    IsValid = false;
+                    throw ex;
+                }
+                IsValid = true;
             }
         }
         public double InnerHeight
@@ -94,7 +122,16 @@ namespace FotoFrameModel
             }
             set
             {
-                _interval.Value = value;
+                try
+                {
+                    _interval.Value = value;
+                }
+                catch (ArgumentException ex)
+                {
+                    IsValid = false;
+                    throw ex;
+                }
+                IsValid = true;
             }
         }
 
@@ -150,7 +187,10 @@ namespace FotoFrameModel
             }
         }
 
-        public bool IsValid => throw new NotImplementedException();
+        public bool IsValid
+        {
+            get; set;
+        }
     }
 
     /// <summary>
