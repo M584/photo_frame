@@ -3,24 +3,64 @@ using System.Collections.Generic;
 
 namespace FotoFrameModel
 {
+    /// <summary>
+    /// Интерфейс для проверки параметров фоторамки 
+    ///     на требования предметной области.
+    /// </summary>
     public interface IChecker
     {
+        /// <summary>
+        /// Проверяет удовлетворяют ли параметры фоторамки
+        ///     требованиям предметной области.
+        /// </summary>
         bool IsValid { get; }
     }
 
-
+    /// <summary>
+    /// Интерфейс параметров фоторамки.
+    /// </summary>
     public interface IPhotoFrame
     {
+        /// <summary>
+        /// Внешняя ширина фоторамки.
+        /// </summary>
         double OuterWidth { get; set; }
+
+        /// <summary>
+        /// Внешняя высота фоторамки.
+        /// </summary>
         double OuterHeight { get; set; }
+
+        /// <summary>
+        /// Внешняя длина фоторамки.
+        /// </summary>
         double OuterLength { get; set; }
+
+        /// <summary>
+        /// Внутренняя высота фоторамки.
+        /// </summary>
         double InnerHeight { get; set; }
+
+        /// <summary>
+        /// Расстояние между внутренней и внешней частями 
+        ///     (кроме, высоты) фоторамки.
+        /// </summary>
         double Interval { get; set; }
+
+        /// <summary>
+        /// Внутренняя ширина фоторамки.
+        /// </summary>
         double InnerWidth { get; }
+
+        /// <summary>
+        /// Внутренняя длина фоторамки.
+        /// </summary>
         double InnerLength { get; }
     }
 
-
+    /// <summary>
+    /// Шаблон фоторамки
+    /// </summary>
     public class PhotoFrameTemplate : IPhotoFrame, IChecker
     {
         private BorderConditions _outerWidth;
@@ -30,8 +70,27 @@ namespace FotoFrameModel
         private BorderConditions _interval;
 
         private delegate double SetValue(double value);
+        /// <summary>
+        /// Словарь с методами для проверки требований 
+        ///     параметров фоторамки:
+        ///     название параметра и его метод проверки.
+        /// </summary>
         private Dictionary<string, SetValue> _methodsCheck;
 
+        /// <summary>
+        /// Установка граничных значений для параметров фоторамки.
+        /// </summary>
+        /// <param name="outerWidth">Граничные условия
+        ///     для внешней ширины фоторамки.</param>
+        /// <param name="outerHeight">Граничные условия
+        ///     для внешней высоты фоторамки.</param>
+        /// <param name="outerLength">Граничные условия
+        ///     для внешней длины фоторамки.</param>
+        /// <param name="innerHeight">Граничные условия
+        ///     для внутренней высоты фоторамки.</param>
+        /// <param name="interval">Граничные условия
+        ///     для расстояния между внутренней и внешней частями
+        ///     фоторамки.</param>
         public PhotoFrameTemplate(
             BorderConditions outerWidth,
             BorderConditions outerHeight,
@@ -60,6 +119,12 @@ namespace FotoFrameModel
             };
         }
 
+        /// <summary>
+        /// Внешняя ширина фоторамки.
+        /// </summary>
+        /// <exception cref="ArgumentException">
+        ///     Возникает, если устанавливаемое значение
+        ///     выходит за рамки заданного интервала.</exception>
         public double OuterWidth
         {
             get
@@ -71,6 +136,13 @@ namespace FotoFrameModel
                 _outerWidth.Value = value;
             }
         }
+
+        /// <summary>
+        /// Внешняя высота фоторамки.
+        /// </summary>
+        /// <exception cref="ArgumentException">
+        ///     Возникает, если устанавливаемое значение
+        ///     выходит за рамки заданного интервала.</exception>
         public double OuterHeight
         {
             get
@@ -82,6 +154,13 @@ namespace FotoFrameModel
                 _outerHeight.Value = value;
             }
         }
+
+        /// <summary>
+        /// Внешняя длина фоторамки.
+        /// </summary>
+        /// <exception cref="ArgumentException">
+        ///     Возникает, если устанавливаемое значение
+        ///     выходит за рамки заданного интервала.</exception>
         public double OuterLength
         {
             get
@@ -93,6 +172,13 @@ namespace FotoFrameModel
                 _outerLength.Value = value;
             }
         }
+
+        /// <summary>
+        /// Внутренняя высота фоторамки.
+        /// </summary>
+        /// <exception cref="ArgumentException">
+        ///     Возникает, если устанавливаемое значение
+        ///     выходит за рамки заданного интервала.</exception>
         public double InnerHeight
         {
             get
@@ -104,6 +190,14 @@ namespace FotoFrameModel
                 _innerHeight.Value = value;
             }
         }
+
+        /// <summary>
+        /// Расстояние между внутренней и внешней частями 
+        ///     (кроме высот) фоторамки.
+        /// </summary>
+        /// <exception cref="ArgumentException">
+        ///     Возникает, если устанавливаемое значение
+        ///     выходит за рамки заданного интервала.</exception>
         public double Interval
         {
             get
@@ -117,9 +211,23 @@ namespace FotoFrameModel
         }
 
 
+        /// <summary>
+        /// Словарь с параметрами фоторамки: имя параметра и 
+        ///     удовлетворяет ли он требованиям предметной области.
+        /// </summary>
         private Dictionary<string, bool> _isValidParams =
             new Dictionary<string, bool>();
 
+        /// <summary>
+        /// Проверяет параметр на удовлетворение
+        ///     требованиям предметной области.
+        /// </summary>
+        /// <param name="paramName">Название проверяемого параметра
+        ///     фоторамки.</param>
+        /// <param name="value">Значение проверяемого параметра
+        ///     фоторамки.</param>
+        /// <returns>Возвращает невыполненные требования
+        ///     в проверяемом параметре.</returns>
         public string ValidateParameter(string paramName, double value)
         {
             var result = String.Empty;
@@ -147,6 +255,10 @@ namespace FotoFrameModel
             return result;
         }
 
+        /// <summary>
+        /// Проверяет удовлетворяют ли параметры фоторамки
+        ///     требованиям предметной области.
+        /// </summary>
         public bool IsValid
         {
             get
@@ -174,19 +286,19 @@ namespace FotoFrameModel
 
         /// <summary>
         /// Вычисляет значение внутренних параметров:
-        ///     ширины или длины
+        ///     ширины или длины.
         /// </summary>
         /// <param name="outerParam">Значение внешней ширины 
-        ///     или длины</param>
+        ///     или длины.</param>
         /// <param name="outerParamName">Имя внешнего параметра
-        ///     (использовать nameof для получения имени)</param>
+        ///     (использовать nameof для получения имени).</param>
         /// <param name="outerParamLabel">Название внешнего параметра
-        ///     в родительном падеже</param>
+        ///     в родительном падеже.</param>
         /// <returns>Посчитанный внутренний параметр:
-        ///     ширина или длина</returns>
+        ///     ширина или длина.</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         ///     Возникает, если нарушена зависимость между
-        ///     внутренним и внешним параметром</exception>
+        ///     внутренним и внешним параметром.</exception>
         private double CalcInnerParam(double outerParam,
             string outerParamName, string outerParamLabel)
         {
@@ -205,6 +317,12 @@ namespace FotoFrameModel
             return innerParam;
         }
 
+        /// <summary>
+        /// Внутренняя ширина фоторамки.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Возникает при нарушении связи
+        ///     с внешней шириной фоторамки.</exception>
         public double InnerWidth
         {
             get
@@ -214,6 +332,13 @@ namespace FotoFrameModel
             }
         }
 
+
+        /// <summary>
+        /// Внутренняя длина фоторамки.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Возникает при нарушении связи
+        ///     с внешней высотой фоторамки.</exception>
         public double InnerLength
         {
             get
@@ -224,8 +349,9 @@ namespace FotoFrameModel
         }
     }
 
+
     /// <summary>
-    /// Диапазон допустимых значений параметра
+    /// Диапазон допустимых значений параметра.
     /// </summary>
     public class BorderConditions
     {
@@ -234,11 +360,14 @@ namespace FotoFrameModel
         private double _value = 0.0f;
 
         /// <summary>
-        /// Установление граничных условий для значения
+        /// Установление граничных условий для значения.
         /// </summary>
-        /// <param name="min">Минимальное значение</param>
-        /// <param name="value">Текущее значение</param>
-        /// <param name="max">Максимальное значение</param>
+        /// <param name="min">Минимальное значение.</param>
+        /// <param name="value">Текущее значение.</param>
+        /// <param name="max">Максимальное значение.</param>
+        /// <exception cref="ArgumentException">
+        ///     Возникает, если максимальное
+        ///     меньше минимального значения.</exception>
         public BorderConditions(double min, double value, double max)
         {
             if (min > max)
@@ -254,7 +383,7 @@ namespace FotoFrameModel
         }
 
         /// <summary>
-        /// Максимальное значение диапазона
+        /// Максимальное значение диапазона.
         /// </summary>
         public double Max
         {
@@ -266,7 +395,7 @@ namespace FotoFrameModel
         }
 
         /// <summary>
-        /// Минимальное значение диапазона
+        /// Минимальное значение диапазона.
         /// </summary>
         public double Min
         {
@@ -278,8 +407,11 @@ namespace FotoFrameModel
         }
 
         /// <summary>
-        /// Значение, входящее в диапазон
+        /// Значение, входящее в диапазон.
         /// </summary>
+        /// <exception cref="ArgumentException">
+        ///     Возникает, если устанавливаемое значение
+        ///     выходит за рамки заданного интервала.</exception>
         public double Value
         {
             get => _value;
