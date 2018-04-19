@@ -100,7 +100,24 @@ namespace FotoFrameModel
 
         public double InnerWidth => OuterWidth - Interval * 2;
 
-        public double InnerLength => OuterLength - Interval * 2;
+        public double InnerLength
+        {
+            get
+            {
+                var innerLength = OuterLength - Interval * 2;
+
+                if(!(innerLength > 0) || !(OuterLength > innerLength))
+                {
+                    var msg = $"Значение внешней длины" +
+                        $" должно быть больше " +
+                        $"двойного интервала = {Interval * 2}({Interval}*2)";
+                    throw new ArgumentOutOfRangeException(
+                        nameof(OuterLength), OuterLength, msg);
+                }
+
+                return innerLength;
+            }
+        }
 
         public bool IsValid => throw new NotImplementedException();
     }

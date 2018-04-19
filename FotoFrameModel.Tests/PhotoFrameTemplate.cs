@@ -18,9 +18,9 @@ namespace FotoFrameModel.Tests
         [SetUp]
         public void Setup()
         {
-            var outerWidth = new BorderConditions(_minForLengthAndWidth, _minForLengthAndWidth, _max);
+            var outerWidth = new BorderConditions(_minForLengthAndWidth, _max, _max);
             var outerHeight = new BorderConditions(_minHeight, _value, _minForLengthAndWidth);
-            var outerLength = new BorderConditions(_minForLengthAndWidth, _minForLengthAndWidth, _max);
+            var outerLength = new BorderConditions(_minForLengthAndWidth, _max, _max);
             var innerHeight = new BorderConditions(_minHeight, _value, _minForLengthAndWidth);
             var interval = new BorderConditions(_minHeight, _value, _maxInterval);
 
@@ -41,9 +41,9 @@ namespace FotoFrameModel.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(_minForLengthAndWidth, template.OuterWidth);
+                Assert.AreEqual(_max, template.OuterWidth);
                 Assert.AreEqual(_value, template.OuterHeight);
-                Assert.AreEqual(_minForLengthAndWidth, template.OuterLength);
+                Assert.AreEqual(_max, template.OuterLength);
                 Assert.AreEqual(_value, template.InnerHeight);
                 Assert.AreEqual(_value, template.Interval);
                 Assert.AreEqual(innerLength, template.InnerLength);
@@ -61,17 +61,53 @@ namespace FotoFrameModel.Tests
             return CalcInnerWidth(outerLength, interval);
         }
 
-        [Test(Description = "Inner length less than outer length")]
-        [TestCase(20, _maxInterval, TestName = "interval = MaxValue")]
-        [TestCase(15, _minHeight, TestName = "interval = MinValue")]
-        public void InnerLengthLessOuterLength(double outerLength, double interval)
+        [Test(Description = "Inner length property test positive")]
+        [TestCase(_max, (_minHeight + _maxInterval) / 2.0f,
+            TestName = "Inner length > outerLength," +
+                " interval = average value")]
+        [TestCase(_max, _minHeight,
+            TestName = "Inner length > outerLength," +
+                " interval = MinValue")]
+        [TestCase(_minForLengthAndWidth, _minHeight,
+            TestName = "Inner length > outerLength," +
+                " outerLength = min")]
+        [TestCase(_max, _minHeight,
+            TestName = "Inner length > outerLength," +
+                " outerLength = max")]
+        [TestCase(_minForLengthAndWidth, (_minHeight + _maxInterval) / 2.0f,
+            TestName = "Inner length > outerLength," +
+                " outerLength = min, interval = average value")]
+        public void InnerLengthTestPositive(double outerLength, 
+            double interval)
         {
             _photoFrame.OuterLength = outerLength;
             _photoFrame.Interval = interval;
 
             var expectedInnerLength = CalcInnerLength(outerLength, interval);
+            var cond = _photoFrame.OuterLength > _photoFrame.InnerLength;
+            
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(expectedInnerLength,
+                    _photoFrame.InnerLength);
+                Assert.That(_photoFrame.InnerLength > 0);
+                Assert.That(cond);
+            });
+        }
 
-            Assert.AreEqual(expectedInnerLength, _photoFrame.InnerLength);
+        [Test(Description = "Inner length property test negative")]
+        [TestCase(_minForLengthAndWidth, _maxInterval,
+            TestName = "Catch exception out of range inner length")]
+        public void InnerLengthTestNegative(double outerLength,
+            double interval)
+        {
+            _photoFrame.OuterLength = outerLength;
+            _photoFrame.Interval = interval;
+
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var t = _photoFrame.InnerLength;
+            });
         }
     }
 }
