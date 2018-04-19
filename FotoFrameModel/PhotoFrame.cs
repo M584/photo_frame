@@ -176,7 +176,7 @@ namespace FotoFrameModel
                 if (value < Min)
                 {
                     var msg = $"Заданное значение = {value} меньше," +
-                        $" чем минимальное значение = {Max}";
+                        $" чем минимальное значение = {Min}";
                     throw new ArgumentException(msg, nameof(Value));
                 }
 
