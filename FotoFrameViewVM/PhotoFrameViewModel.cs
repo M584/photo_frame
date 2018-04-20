@@ -107,5 +107,21 @@ namespace FotoFrameViewVM
         }
 
         #endregion
+
+
+        #region IDataErrorInfo Members
+
+        public string this[string columnName]
+        {
+            get
+            {
+                //TODO: заменить на реализацию проверки параметра
+                return String.Empty;
+            }
+        }
+
+        public string Error => null;
+
+        #endregion
     }
 }
