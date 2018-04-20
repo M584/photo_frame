@@ -353,7 +353,7 @@ namespace FotoFrameModel
             if (!(innerParam > 0) || !(outerParam > innerParam))
             {
                 var msg = $"Значение внешней {outerParamLabel}" +
-                    $" должно быть больше " +
+                    $"= {outerParam} должно быть больше " +
                     $"двойного интервала = {Interval * 2}" +
                     $"({Interval}*2)";
                 throw new ArgumentException(msg);
@@ -389,7 +389,7 @@ namespace FotoFrameModel
             get
             {
                 return CalcInnerParam(OuterLength,
-                    nameof(OuterLength), "высоты");
+                    nameof(OuterLength), "длины");
             }
         }
     }
