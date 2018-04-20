@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:FotoFrameViewVM"
         mc:Ignorable="d"
         Title="Построитель фоторамок" Height="235" Width="260" ResizeMode="NoResize">
-    <StackPanel Margin="5" Width="230">
+    <Window.Resources>
+        <local:PhotoFrameViewModel x:Key="PhotoFrame"/>
+    </Window.Resources>
+    <StackPanel Margin="5" Width="230" DataContext="{StaticResource PhotoFrame}">
         <StackPanel.Resources>
             <Style TargetType="HeaderedContentControl">
                 <Setter Property="Margin" Value="3"/>
@@ -31,8 +34,6 @@
                 <Setter Property="HorizontalAlignment" Value="Center"/>
             </Style>
 
-            <!--<local:VehicleViewModel x:Key="Data"/>-->
-
             <Style x:Key="TextBoxInError" TargetType="TextBox">
                 <Style.Triggers>
                     <Trigger Property="Validation.HasError" Value="true">
@@ -47,7 +48,7 @@
         <HeaderedContentControl Header="Внешняя ширина:">
             <TextBox Width="80" Style="{StaticResource TextBoxInError}">
                 <TextBox.Text>
-                    <Binding Path="null"  Mode="TwoWay"
+                    <Binding Path="OuterWidth"  Mode="TwoWay"
                          ValidatesOnExceptions="True"
                          UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
@@ -60,7 +61,7 @@
         <HeaderedContentControl Header="Внешняя высота:">
             <TextBox Width="80" Style="{StaticResource TextBoxInError}">
                 <TextBox.Text>
-                    <Binding Path="null"  Mode="TwoWay"
+                    <Binding Path="OuterHeight"  Mode="TwoWay"
                          ValidatesOnExceptions="True"
                          UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
@@ -73,7 +74,7 @@
         <HeaderedContentControl Header="Внешняя длина:">
             <TextBox Width="80" Style="{StaticResource TextBoxInError}">
                 <TextBox.Text>
-                    <Binding Path="null"  Mode="TwoWay"
+                    <Binding Path="OuterLength"  Mode="TwoWay"
                          ValidatesOnExceptions="True"
                          UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
@@ -86,7 +87,7 @@
         <HeaderedContentControl Header="Внутренняя высота:">
             <TextBox Width="80" Style="{StaticResource TextBoxInError}">
                 <TextBox.Text>
-                    <Binding Path="null"  Mode="TwoWay"
+                    <Binding Path="InnerHeight"  Mode="TwoWay"
                          ValidatesOnExceptions="True"
                          UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
@@ -99,7 +100,7 @@
         <HeaderedContentControl Header="Расстояние между&#10;внутренней и внешней&#10;частями:" >
             <TextBox Width="80" Style="{StaticResource TextBoxInError}">
                 <TextBox.Text>
-                    <Binding Path="null"  Mode="TwoWay"
+                    <Binding Path="Interval"  Mode="TwoWay"
                          ValidatesOnExceptions="True"
                          UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
