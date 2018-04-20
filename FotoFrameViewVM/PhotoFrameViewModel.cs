@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using FotoFrameModel;
 
 namespace FotoFrameViewVM
@@ -44,6 +45,7 @@ namespace FotoFrameViewVM
             set
             {
                 _photoFrame.OuterWidth = value;
+                OnPropertyChanged(nameof(this.OuterWidth));
             }
         }
 
@@ -55,6 +57,7 @@ namespace FotoFrameViewVM
             set
             {
                 _photoFrame.OuterHeight = value;
+                OnPropertyChanged(nameof(this.OuterHeight));
             }
         }
 
@@ -66,6 +69,7 @@ namespace FotoFrameViewVM
             set
             {
                 _photoFrame.OuterLength = value;
+                OnPropertyChanged(nameof(this.OuterLength));
             }
         }
 
@@ -77,6 +81,7 @@ namespace FotoFrameViewVM
             set
             {
                 _photoFrame.InnerHeight = value;
+                OnPropertyChanged(nameof(this.InnerHeight));
             }
         }
 
@@ -88,7 +93,19 @@ namespace FotoFrameViewVM
             set
             {
                 _photoFrame.Interval = value;
+                OnPropertyChanged(nameof(this.Interval));
             }
         }
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+
+        #endregion
     }
 }
