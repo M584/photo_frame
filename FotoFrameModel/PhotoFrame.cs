@@ -136,6 +136,7 @@ namespace FotoFrameModel
                 try
                 {
                     _outerWidth.Value = value;
+                    var calcInnerWidth = InnerWidth;
                 }
                 catch (ArgumentException ex)
                 {
@@ -190,6 +191,7 @@ namespace FotoFrameModel
                 try
                 {
                     _outerLength.Value = value;
+                    var calcInnerLength = InnerLength;
                 }
                 catch (ArgumentException ex)
                 {
@@ -245,6 +247,8 @@ namespace FotoFrameModel
                 try
                 {
                     _interval.Value = value;
+                    var iLength = InnerLength;
+                    var iWidth = InnerWidth;
                 }
                 catch (ArgumentException ex)
                 {
@@ -282,9 +286,7 @@ namespace FotoFrameModel
                 {
                     _methodsCheck[paramName](value);
                 }
-                catch (Exception ex)
-                    when (ex is ArgumentException
-                        || ex is ArgumentOutOfRangeException)
+                catch (ArgumentException ex)
                 {
                     result = ex.Message;
                 }
@@ -313,7 +315,7 @@ namespace FotoFrameModel
                     var iLength = InnerLength;
                     var iWidth = InnerWidth;
                 }
-                catch (ArgumentOutOfRangeException ex)
+                catch (ArgumentException ex)
                 {
                     valid = false;
                     return valid;
@@ -340,7 +342,7 @@ namespace FotoFrameModel
         ///     в родительном падеже.</param>
         /// <returns>Посчитанный внутренний параметр:
         ///     ширина или длина.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">
+        /// <exception cref="ArgumentException">
         ///     Возникает, если нарушена зависимость между
         ///     внутренним и внешним параметром.</exception>
         private double CalcInnerParam(double outerParam,
@@ -354,8 +356,7 @@ namespace FotoFrameModel
                     $" должно быть больше " +
                     $"двойного интервала = {Interval * 2}" +
                     $"({Interval}*2)";
-                throw new ArgumentOutOfRangeException(
-                    outerParamName, outerParam, msg);
+                throw new ArgumentException(msg);
             }
 
             return innerParam;
@@ -364,7 +365,7 @@ namespace FotoFrameModel
         /// <summary>
         /// Внутренняя ширина фоторамки.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">
+        /// <exception cref="ArgumentException">
         ///     Возникает при нарушении связи
         ///     с внешней шириной фоторамки.</exception>
         public double InnerWidth
@@ -380,7 +381,7 @@ namespace FotoFrameModel
         /// <summary>
         /// Внутренняя длина фоторамки.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">
+        /// <exception cref="ArgumentException">
         ///     Возникает при нарушении связи
         ///     с внешней высотой фоторамки.</exception>
         public double InnerLength

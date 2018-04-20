@@ -13,7 +13,7 @@ namespace FotoFrameViewVM
         public PhotoFrameViewModel()
         {
             const double minHeight = 1.0f;
-            const double minForLengthAndWidth = 15.0f;
+            const double minForLengthAndWidth = 5.0f;
             const double max = 100.0f;
             const double maxInterval = 6.0f;
             const double value = 5.0f;
