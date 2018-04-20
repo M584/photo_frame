@@ -421,14 +421,14 @@ namespace FotoFrameModel
                 {
                     var msg = $"Заданное значение = {value} больше," +
                         $" чем максимальное значение = {Max}";
-                    throw new ArgumentException(msg, nameof(Value));
+                    throw new ArgumentException(msg);
                 }
 
                 if (value < Min)
                 {
                     var msg = $"Заданное значение = {value} меньше," +
                         $" чем минимальное значение = {Min}";
-                    throw new ArgumentException(msg, nameof(Value));
+                    throw new ArgumentException(msg);
                 }
 
                 _value = value;

@@ -13,7 +13,7 @@ namespace FotoFrameViewVM
         public PhotoFrameViewModel()
         {
             const double minHeight = 1.0f;
-            const double minForLengthAndWidth = 10.0f;
+            const double minForLengthAndWidth = 15.0f;
             const double max = 100.0f;
             const double maxInterval = 6.0f;
             const double value = 5.0f;
@@ -49,7 +49,8 @@ namespace FotoFrameViewVM
             }
         }
 
-        public double OuterHeight {
+        public double OuterHeight
+        {
             get
             {
                 return _photoFrame.OuterHeight;
@@ -61,7 +62,8 @@ namespace FotoFrameViewVM
             }
         }
 
-        public double OuterLength {
+        public double OuterLength
+        {
             get
             {
                 return _photoFrame.OuterLength;
@@ -73,7 +75,8 @@ namespace FotoFrameViewVM
             }
         }
 
-        public double InnerHeight {
+        public double InnerHeight
+        {
             get
             {
                 return _photoFrame.InnerHeight;
@@ -85,7 +88,8 @@ namespace FotoFrameViewVM
             }
         }
 
-        public double Interval {
+        public double Interval
+        {
             get
             {
                 return _photoFrame.Interval;
