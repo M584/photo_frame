@@ -40,19 +40,21 @@ namespace FotoFrameViewVM
         {
             get
             {
+                _photoFrame.OuterWidth = _photoFrame.OuterWidth;
                 return _photoFrame.OuterWidth;
             }
             set
             {
                 _photoFrame.OuterWidth = value;
                 OnPropertyChanged(nameof(this.OuterWidth));
+                OnPropertyChanged(nameof(this.Interval));
             }
         }
 
         public double OuterHeight
         {
             get
-            {
+            {               
                 return _photoFrame.OuterHeight;
             }
             set
@@ -66,12 +68,14 @@ namespace FotoFrameViewVM
         {
             get
             {
+                _photoFrame.OuterLength = _photoFrame.OuterLength;
                 return _photoFrame.OuterLength;
             }
             set
             {
                 _photoFrame.OuterLength = value;
                 OnPropertyChanged(nameof(this.OuterLength));
+                OnPropertyChanged(nameof(this.Interval));
             }
         }
 
@@ -92,12 +96,15 @@ namespace FotoFrameViewVM
         {
             get
             {
+                _photoFrame.Interval = _photoFrame.Interval;
                 return _photoFrame.Interval;
             }
             set
             {
                 _photoFrame.Interval = value;
                 OnPropertyChanged(nameof(this.Interval));
+                OnPropertyChanged(nameof(this.OuterWidth));
+                OnPropertyChanged(nameof(this.OuterLength));
             }
         }
 
