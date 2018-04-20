@@ -101,6 +101,14 @@ namespace FotoFrameViewVM
             }
         }
 
+        public PhotoFrameTemplate GetPhotoFrameTemplate
+        {
+            get
+            {
+                return _photoFrame;
+            }
+        }
+
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;

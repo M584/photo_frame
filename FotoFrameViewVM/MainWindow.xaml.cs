@@ -27,7 +27,14 @@ namespace FotoFrameViewVM
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            var photoFrame = this.Resources["PhotoFrame"]
+                as PhotoFrameViewModel;
 
+            var isValid2 = (bool)photoFrame?.GetPhotoFrameTemplate.IsValid 
+                ? "Верны" : "Ложны";
+            MessageBox.Show($"Параметры фоторамки {isValid2}",
+                "Построитель фоторамок",
+                MessageBoxButton.OK);
         }
     }
 }
