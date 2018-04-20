@@ -177,15 +177,15 @@ namespace FotoFrameModel.Tests
         //Корректность работы задаваемых свойств
         //  проверена с помощью разнообразных тестовых случаев для них.
         [Test(Description = "Validation photo frame template test")]
-        [TestCase(_norm, _norm, 1, _norm, _norm, true, 
+        [TestCase(_norm, _norm, 1, _norm, _norm, true,
             TestName = "Valid params")]
-        [TestCase(0, 0, 0, 0, 0, false, 
+        [TestCase(0, 0, 0, 0, 0, false,
             TestName = "Wrong params")]
-        [TestCase(_smallest, _norm, 1, _norm, _norm, false, 
+        [TestCase(_smallest, _norm, 1, _norm, _norm, false,
             TestName = "Outer width < min")]
-        [TestCase(_biggest, _norm, 1, _norm, _norm, false, 
+        [TestCase(_biggest, _norm, 1, _norm, _norm, false,
             TestName = "Outer width > max")]
-        [TestCase(_norm, _smallest, 1, _norm, _norm, false, 
+        [TestCase(_norm, _smallest, 1, _norm, _norm, false,
             TestName = "Outer length < min")]
         [TestCase(_norm, _biggest, 1, _norm, _norm, false,
             TestName = "Outer length > max")]
@@ -213,7 +213,29 @@ namespace FotoFrameModel.Tests
             double outerLength, double interval, double outerHeight,
                 double innerHeight, bool expected)
         {
-            var frameParams = new List<Tuple<string, double, SetValue>>
+            var frameParams = GetListParams(outerWidth,
+                outerLength, interval, outerHeight, innerHeight);
+
+            foreach (var p in frameParams)
+            {
+                try
+                {
+                    _photoFrame.ValidateParameter(p.Item1, p.Item2);
+                    p.Item3(p.Item2);
+                }
+                catch (Exception ex)
+                   when (ex is ArgumentException
+                       || ex is ArgumentOutOfRangeException)
+                { }
+            }
+            Assert.AreEqual(expected, _photoFrame.IsValid);
+        }
+
+        private List<Tuple<string, double, SetValue>> GetListParams(double outerWidth,
+            double outerLength, double interval, double outerHeight,
+                double innerHeight)
+        {
+            return new List<Tuple<string, double, SetValue>>
             {
                 new Tuple<string, double, SetValue>(
                     nameof(_photoFrame.OuterWidth), outerWidth,
@@ -231,20 +253,6 @@ namespace FotoFrameModel.Tests
                     nameof(_photoFrame.InnerHeight), innerHeight,
                         ((double value) => _photoFrame.InnerHeight = value))
             };
-
-            foreach (var p in frameParams)
-            {
-                try
-                {
-                    _photoFrame.ValidateParameter(p.Item1, p.Item2);
-                    p.Item3(p.Item2);
-                }
-                catch (Exception ex)
-                   when (ex is ArgumentException
-                       || ex is ArgumentOutOfRangeException)
-                { }
-            }
-            Assert.AreEqual(expected, _photoFrame.IsValid);
         }
     }
 }

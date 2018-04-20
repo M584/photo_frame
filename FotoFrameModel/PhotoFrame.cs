@@ -206,7 +206,16 @@ namespace FotoFrameModel
             }
             set
             {
-                _interval.Value = value;
+                try
+                {
+                    _interval.Value = value;
+                }
+                catch(ArgumentException ex)
+                {
+                    _isValidParams[nameof(Interval)] = false;
+                    return;
+                }
+                _isValidParams[nameof(Interval)] = true;
             }
         }
 
