@@ -133,7 +133,16 @@ namespace FotoFrameModel
             }
             set
             {
-                _outerWidth.Value = value;
+                try
+                {
+                    _outerWidth.Value = value;
+                }
+                catch (ArgumentException ex)
+                {
+                    _isValidParams[nameof(OuterWidth)] = false;
+                    throw ex;
+                }
+                _isValidParams[nameof(OuterWidth)] = true;
             }
         }
 
@@ -151,7 +160,16 @@ namespace FotoFrameModel
             }
             set
             {
-                _outerHeight.Value = value;
+                try
+                {
+                    _outerHeight.Value = value;
+                }
+                catch (ArgumentException ex)
+                {
+                    _isValidParams[nameof(OuterHeight)] = false;
+                    throw ex;
+                }
+                _isValidParams[nameof(OuterHeight)] = true;
             }
         }
 
@@ -168,8 +186,17 @@ namespace FotoFrameModel
                 return _outerLength.Value;
             }
             set
-            {
-                _outerLength.Value = value;
+            {      
+                try
+                {
+                    _outerLength.Value = value;
+                }
+                catch (ArgumentException ex)
+                {
+                    _isValidParams[nameof(OuterLength)] = false;
+                    throw ex;
+                }
+                _isValidParams[nameof(OuterLength)] = true;
             }
         }
 
@@ -187,7 +214,16 @@ namespace FotoFrameModel
             }
             set
             {
-                _innerHeight.Value = value;
+                try
+                {
+                    _innerHeight.Value = value;
+                }
+                catch (ArgumentException ex)
+                {
+                    _isValidParams[nameof(InnerHeight)] = false;
+                    throw ex;
+                }
+                _isValidParams[nameof(InnerHeight)] = true;
             }
         }
 
@@ -210,15 +246,14 @@ namespace FotoFrameModel
                 {
                     _interval.Value = value;
                 }
-                catch(ArgumentException ex)
+                catch (ArgumentException ex)
                 {
                     _isValidParams[nameof(Interval)] = false;
-                    return;
+                    throw ex;
                 }
                 _isValidParams[nameof(Interval)] = true;
             }
-        }
-
+        }  
 
         /// <summary>
         /// Словарь с параметрами фоторамки: имя параметра и 
