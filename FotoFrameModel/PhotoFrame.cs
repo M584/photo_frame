@@ -315,7 +315,7 @@ namespace FotoFrameModel
                     var iLength = InnerLength;
                     var iWidth = InnerWidth;
                 }
-                catch (ArgumentException ex)
+                catch (ArgumentException)
                 {
                     valid = false;
                     return valid;

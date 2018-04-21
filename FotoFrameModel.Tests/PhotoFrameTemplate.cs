@@ -230,7 +230,7 @@ namespace FotoFrameModel.Tests
         [TestCase(_norm, _norm, 1, _norm, _norm + 10.0f, false,
             TestName = "Outer height < inner height")]
         public void CheckAllStepsValidationParametersPhotoFrameNegative(
-            double outerWidth,double outerLength, double interval, 
+            double outerWidth, double outerLength, double interval,
                 double outerHeight, double innerHeight, bool expected)
         {
             Assert.Multiple(() =>
@@ -261,7 +261,7 @@ namespace FotoFrameModel.Tests
                     _photoFrame.ValidateParameter(p.Item1, p.Item2);
                     p.Item3(p.Item2);
                 }
-                catch (ArgumentException ex)
+                catch (ArgumentException)
                 { }
             }
 
@@ -301,7 +301,7 @@ namespace FotoFrameModel.Tests
                 {
                     p.Item3(p.Item2);
                 }
-                catch (ArgumentException ex)
+                catch (ArgumentException)
                 { }
             }
         }
