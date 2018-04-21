@@ -12,7 +12,12 @@ namespace FotoFrameModel
     {
         public void Build(IPhotoFrame photoFrame, IChecker checker)
         {
-            throw new NotImplementedException();
+            if(checker.IsValid == false)
+            {
+                var msg = $"Шаблон фоторамки имеет" +
+                    $" недопустимые параметры для построения.";
+                throw new InvalidOperationException(msg);
+            }
         }
     }
 }
