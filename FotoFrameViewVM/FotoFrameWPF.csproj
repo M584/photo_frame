@@ -95,7 +95,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FotoFrameModel\FotoFrameModel.csproj" />
+    <ProjectReference Include="..\FotoFrameModel\FotoFrameModel.csproj">
+      <Project>{5b2f535e-6b2b-4011-a4e5-333b40c9b18c}</Project>
+      <Name>FotoFrameModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
