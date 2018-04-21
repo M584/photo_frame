@@ -9,6 +9,7 @@ namespace FotoFrameViewVM
         IDataErrorInfo
     {
         private PhotoFrameTemplate _photoFrame;
+        private IBuilder _builder;
 
         public PhotoFrameViewModel()
         {
@@ -34,6 +35,8 @@ namespace FotoFrameViewVM
                 outerLength,
                 innerHeight,
                 interval);
+
+            _builder = new BuilderPhotoFrame();
         }
 
         public double OuterWidth
@@ -54,7 +57,7 @@ namespace FotoFrameViewVM
         public double OuterHeight
         {
             get
-            {               
+            {
                 return _photoFrame.OuterHeight;
             }
             set
@@ -108,12 +111,20 @@ namespace FotoFrameViewVM
             }
         }
 
-        public PhotoFrameTemplate GetPhotoFrameTemplate
+        public bool BuildModel()
         {
-            get
+            var resultBuilding = true;
+            try
             {
-                return _photoFrame;
+                _builder.Build(_photoFrame as IPhotoFrame,
+                _photoFrame as IChecker);
             }
+            catch (InvalidOperationException)
+            {
+                resultBuilding = false;
+            }
+
+            return resultBuilding;
         }
 
         #region INotifyPropertyChanged Members

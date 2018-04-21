@@ -13,6 +13,9 @@ namespace FotoFrameModel
         /// </summary>
         /// <param name="photoFrame">Шаблон фоторамки</param>
         /// <param name="checker">Проверяющий параметры фоторамки</param>
+        /// <exception cref="InvalidOperationException">
+        ///     Вызывается тогда, когда параметры фоторамки
+        ///     имеют недопустимые значения.</exception>
         void Build(IPhotoFrame photoFrame, IChecker checker);
     }
 

@@ -29,12 +29,17 @@ namespace FotoFrameViewVM
         {
             var photoFrame = this.Resources["PhotoFrame"]
                 as PhotoFrameViewModel;
+            var isValid = (bool)photoFrame?.BuildModel();
 
-            var isValid2 = (bool)photoFrame?.GetPhotoFrameTemplate.IsValid 
-                ? "Верны" : "Ложны";
-            MessageBox.Show($"Параметры фоторамки {isValid2}",
+            var msg = isValid ? "Фоторамка успешно построена."
+                : "Исправьте параметры фоторамки.";
+            var typeMessage = isValid ? MessageBoxImage.Information
+                : MessageBoxImage.Warning;
+
+            MessageBox.Show(msg,
                 "Построитель фоторамок",
-                MessageBoxButton.OK);
+                MessageBoxButton.OK,
+                typeMessage);
         }
     }
 }
