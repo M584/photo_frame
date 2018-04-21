@@ -18,12 +18,16 @@ namespace FotoFrameModel.Tests
         private const double _norm = _minForLengthAndWidth;
 
         private PhotoFrameTemplate _photoFrame;
+        private IChecker _checker;
+        private IPhotoFrame _frame;
         private IBuilder _builder;
 
         [SetUp]
         public void Setup()
         {
             _photoFrame = GeneratePhotoFrameTemplate();
+            _checker = _photoFrame as IChecker;
+            _frame = _photoFrame as IPhotoFrame;
             _builder = new BuilderPhotoFrame();
         }
 
@@ -193,9 +197,8 @@ namespace FotoFrameModel.Tests
 
         public delegate double SetValue(double value);
 
-        [Test(Description = "Validation photo frame template test")]
-        [TestCase(_norm + 2, _norm + 2, 1, _norm, _norm, true,
-            TestName = "Valid params")]
+        [Test(Description = "Check all steps of validation parameters" +
+            "photo frame negative")]
         [TestCase(0, 0, 0, 0, 0, false,
             TestName = "Wrong params")]
         [TestCase(_smallest, _norm, 1, _norm, _norm, false,
@@ -226,12 +229,30 @@ namespace FotoFrameModel.Tests
                 " outer length less than 2x interval")]
         [TestCase(_norm, _norm, 1, _norm, _norm + 10.0f, false,
             TestName = "Outer height < inner height")]
-        public void IsValidAndValidateParameterTest(double outerWidth,
-            double outerLength, double interval, double outerHeight,
-                double innerHeight, bool expected)
+        public void CheckAllStepsValidationParametersPhotoFrameNegative(
+            double outerWidth,double outerLength, double interval, 
+                double outerHeight, double innerHeight, bool expected)
         {
-            var frameParams = GetListParams(outerWidth,
-                outerLength, interval, outerHeight, innerHeight);
+            Assert.Multiple(() =>
+            {
+                CheckParamsTestPositive(outerWidth, outerLength,
+                        interval, outerHeight, innerHeight, expected);
+                Assert.Throws<InvalidOperationException>(() =>
+                {
+                    _builder.Build(_frame, _checker);
+                });
+            });
+        }
+
+        [Test(Description = "Check params photo frame test positive")]
+        [TestCase(_norm + 2, _norm + 2, 1, _norm, _norm, true,
+            TestName = "Valid params")]
+        public void CheckParamsTestPositive(
+            double outerWidth, double outerLength, double interval,
+                double outerHeight, double innerHeight, bool expected)
+        {
+            var frameParams = GetListParams(outerWidth, outerLength,
+                interval, outerHeight, innerHeight);
 
             foreach (var p in frameParams)
             {
@@ -243,6 +264,7 @@ namespace FotoFrameModel.Tests
                 catch (ArgumentException ex)
                 { }
             }
+
             Assert.AreEqual(expected, _photoFrame.IsValid);
         }
 
@@ -270,48 +292,6 @@ namespace FotoFrameModel.Tests
             };
         }
 
-        [Test(Description = "Proof that parameters photo frame" +
-            " is are valid or not")]
-        [TestCase(_smallest, _norm, 1, _norm, _norm, false,
-            TestName = "Wrong outer width < min")]
-        [TestCase(_biggest, _norm, 1, _norm, _norm, false,
-            TestName = "Wrong Outer width > max")]
-        [TestCase(_norm, _smallest, 1, _norm, _norm, false,
-            TestName = "Wrong Outer length < min")]
-        [TestCase(_norm, _biggest, 1, _norm, _norm, false,
-            TestName = "Wrong Outer length > max")]
-        [TestCase(_norm, _norm, 1, _smallest, _norm, false,
-            TestName = "Wrong Outer height < min")]
-        [TestCase(_norm, _norm, 1, _biggest, _norm, false,
-            TestName = "Wrong Outer height > max")]
-        [TestCase(_norm, _norm, _smallest, _norm, _norm, false,
-            TestName = "Wrong Interval < min")]
-        [TestCase(_norm, _norm, _biggest, _norm, _norm, false,
-            TestName = "Wrong Interval > max")]
-        [TestCase(_norm, _norm, 1, _norm, _smallest, false,
-            TestName = "Wrong Inner height < min")]
-        [TestCase(_norm, _norm, 1, _norm, _biggest, false,
-            TestName = "Wrong Inner height > max")]
-        [TestCase(_norm, _max, _maxInterval, _norm, _norm, false,
-            TestName = "Wrong Inner width is wrong," +
-                "outer width less than 2x interval")]
-        [TestCase(_max, _norm, _maxInterval, _norm, _norm, false,
-            TestName = "Wrong Inner length is wrong," +
-                " outer length less than 2x interval")]
-        [TestCase(_norm, _norm, 1, _norm, _norm + 10.0f, false,
-            TestName = "Wrong Outer height < inner height")]
-        public void ProofParametersAreValid(double outerWidth,
-            double outerLength, double interval, double outerHeight,
-                double innerHeight, bool areValidExpected)
-        {
-            var parameters = GetListParams(outerWidth,
-                outerLength, interval, outerHeight, innerHeight);
-
-            SetParameters(ref parameters);
-
-            Assert.AreEqual(areValidExpected, _photoFrame.IsValid);
-        }
-
         private void SetParameters(ref
             List<Tuple<string, double, SetValue>> parameters)
         {
@@ -324,53 +304,6 @@ namespace FotoFrameModel.Tests
                 catch (ArgumentException ex)
                 { }
             }
-        }
-
-        [Test(Description = "Check is valid parameters photo frame ")]
-        [TestCase(_smallest, _norm, 1, _norm, _norm, false,
-            TestName = "When building wrong outer width < min")]
-        [TestCase(_biggest, _norm, 1, _norm, _norm, false,
-            TestName = "When building wrong Outer width > max")]
-        [TestCase(_norm, _smallest, 1, _norm, _norm, false,
-            TestName = "When building wrong Outer length < min")]
-        [TestCase(_norm, _biggest, 1, _norm, _norm, false,
-            TestName = "When building wrong Outer length > max")]
-        [TestCase(_norm, _norm, 1, _smallest, _norm, false,
-            TestName = "When building wrong Outer height < min")]
-        [TestCase(_norm, _norm, 1, _biggest, _norm, false,
-            TestName = "When building wrong Outer height > max")]
-        [TestCase(_norm, _norm, _smallest, _norm, _norm, false,
-            TestName = "When building wrong Interval < min")]
-        [TestCase(_norm, _norm, _biggest, _norm, _norm, false,
-            TestName = "When building wrong Interval > max")]
-        [TestCase(_norm, _norm, 1, _norm, _smallest, false,
-            TestName = "When building wrong Inner height < min")]
-        [TestCase(_norm, _norm, 1, _norm, _biggest, false,
-            TestName = "When building wrong Inner height > max")]
-        [TestCase(_norm, _max, _maxInterval, _norm, _norm, false,
-            TestName = "When building wrong Inner width is wrong," +
-                "outer width less than 2x interval")]
-        [TestCase(_max, _norm, _maxInterval, _norm, _norm, false,
-            TestName = "When building wrong Inner length is wrong," +
-                " outer length less than 2x interval")]
-        [TestCase(_norm, _norm, 1, _norm, _norm + 10.0f, false,
-            TestName = "When building wrong Outer height < inner height")]
-        public void CheckParametersPhotoFrameWhenBuild(double outerWidth,
-            double outerLength, double interval, double outerHeight,
-                double innerHeight, bool areValidExpected)
-        {
-            var parameters = GetListParams(outerWidth,
-                outerLength, interval, outerHeight, innerHeight);
-
-            SetParameters(ref parameters);
-
-            var photoFrame = _photoFrame as IPhotoFrame;
-            var checker = _photoFrame as IChecker;
-
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                _builder.Build(photoFrame, checker);
-            });
         }
     }
 }
