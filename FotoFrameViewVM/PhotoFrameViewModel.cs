@@ -64,6 +64,7 @@ namespace FotoFrameViewVM
             {
                 _photoFrame.OuterHeight = value;
                 OnPropertyChanged(nameof(this.OuterHeight));
+                OnPropertyChanged(nameof(this.InnerHeight));
             }
         }
 
@@ -92,6 +93,7 @@ namespace FotoFrameViewVM
             {
                 _photoFrame.InnerHeight = value;
                 OnPropertyChanged(nameof(this.InnerHeight));
+                OnPropertyChanged(nameof(this.OuterHeight));
             }
         }
 
