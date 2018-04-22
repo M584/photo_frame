@@ -1,8 +1,8 @@
 ﻿using Kompas6Constants3D;
-using Kompas6LTAPI5;
+using Kompas6API5;
 using System;
 using System.Runtime.InteropServices;
-using System.Windows;
+using System.Threading;
 
 namespace FotoFrameModel
 {
@@ -30,30 +30,51 @@ namespace FotoFrameModel
     public class BuilderPhotoFrame : IBuilder
     {
         private KompasObject _kompas;
+        private const string progId = "KOMPAS.Application.5";
 
         private double _halfX;
         private double _halfY;
 
         public BuilderPhotoFrame()
         {
-            var progId = "KOMPASLT.Application.5";
-            Type t = Type.GetTypeFromProgID(progId);
+            ShowCAD();
+        }
 
-            //Получение ссылки на запущенную копию Компас 3д
-            _kompas = (KompasObject)Marshal.GetActiveObject(progId);
-            _kompas = null;
-            if (_kompas == null)
-            {
-                //Так как нету запущенной копии, то запускаем Компас 3д сами
-                _kompas = (KompasObject)Activator.CreateInstance(t);
-            }
+        private void RunCAD()
+        {
+            var kompasType =
+               Type.GetTypeFromProgID(progId);
 
-            if (_kompas != null)
+            try
             {
-                _kompas.Visible = true;
-                _kompas.ActivateControllerAPI();
+                //Получение ссылки на запущенную копию Компас 3д
+                _kompas = (KompasObject)Marshal.
+                    GetActiveObject(progId);
             }
-            //Возможно понадобиться выкидывать исключение, что не получили ссылку на Компас 3д
+            catch (COMException)
+            {
+                _kompas = (KompasObject)Activator.
+                    CreateInstance(kompasType);
+            }
+        }
+
+        private void ShowCAD()
+        {
+            var maxCount = 3;
+            for (var i = 0; i < maxCount; i++)
+            {
+                try
+                {
+                    _kompas.Visible = true;
+                }
+                catch (Exception ex)
+                    when (ex is COMException
+                        || ex is NullReferenceException)
+                {
+                    RunCAD();
+                }
+            }
+            _kompas?.ActivateControllerAPI();
         }
 
         /// <summary>
@@ -72,6 +93,8 @@ namespace FotoFrameModel
                     $" недопустимые параметры для построения.";
                 throw new InvalidOperationException(msg);
             }
+
+            ShowCAD();
 
             _halfX = 0;
             _halfY = _halfX;
