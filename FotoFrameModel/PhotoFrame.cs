@@ -152,7 +152,9 @@ namespace FotoFrameModel
         /// </summary>
         /// <exception cref="ArgumentException">
         ///     Возникает, если устанавливаемое значение
-        ///     выходит за рамки заданного интервала.</exception>
+        ///     выходит за рамки заданного интервала или
+        ///     нарушается условие взаимосвязи 
+        ///     с внутренней высотой.</exception>
         public double OuterHeight
         {
             get
@@ -163,6 +165,14 @@ namespace FotoFrameModel
             {
                 try
                 {
+                    if (_innerHeight.Value > value)
+                    {
+                        var msg = $"Внутренняя высота = " +
+                            $"{_innerHeight.Value} " +
+                            $"должна быть меньше или равна " +
+                            $"внешней высоте = {value}";
+                        throw new ArgumentException(msg);
+                    }
                     _outerHeight.Value = value;
                 }
                 catch (ArgumentException ex)
@@ -187,7 +197,7 @@ namespace FotoFrameModel
                 return _outerLength.Value;
             }
             set
-            {      
+            {
                 try
                 {
                     _outerLength.Value = value;
@@ -207,7 +217,9 @@ namespace FotoFrameModel
         /// </summary>
         /// <exception cref="ArgumentException">
         ///     Возникает, если устанавливаемое значение
-        ///     выходит за рамки заданного интервала.</exception>
+        ///     выходит за рамки заданного интервала или
+        ///     нарушается условие взаимосвязи 
+        ///     с внешней высотой.</exception>
         public double InnerHeight
         {
             get
@@ -218,6 +230,13 @@ namespace FotoFrameModel
             {
                 try
                 {
+                    if (_outerHeight.Value < value)
+                    {
+                        var msg = $"Внутренняя высота = {value} " +
+                            $"должна быть меньше или равна " +
+                            $"внешней высоте = {_outerHeight.Value}";
+                        throw new ArgumentException(msg);
+                    }
                     _innerHeight.Value = value;
                 }
                 catch (ArgumentException ex)
@@ -257,7 +276,7 @@ namespace FotoFrameModel
                 }
                 _isValidParams[nameof(Interval)] = true;
             }
-        }  
+        }
 
         /// <summary>
         /// Словарь с параметрами фоторамки: имя параметра и 
@@ -315,7 +334,7 @@ namespace FotoFrameModel
                     var iLength = InnerLength;
                     var iWidth = InnerWidth;
                 }
-                catch (ArgumentException ex)
+                catch (ArgumentException)
                 {
                     valid = false;
                     return valid;
