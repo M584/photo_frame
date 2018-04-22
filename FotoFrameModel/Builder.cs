@@ -36,23 +36,23 @@ namespace FotoFrameModel
 
         public BuilderPhotoFrame()
         {
-            //var progId = "KOMPASLT.Application.5";
-            //Type t = Type.GetTypeFromProgID(progId);
+            var progId = "KOMPASLT.Application.5";
+            Type t = Type.GetTypeFromProgID(progId);
 
-            ////Получение ссылки на запущенную копию Компас 3д
-            //_kompas = (KompasObject)Marshal.GetActiveObject(progId);
-            //_kompas = null;
-            //if (_kompas == null)
-            //{
-            //    //Так как нету запущенной копии, то запускаем Компас 3д сами
-            //    _kompas = (KompasObject)Activator.CreateInstance(t);
-            //}
+            //Получение ссылки на запущенную копию Компас 3д
+            _kompas = (KompasObject)Marshal.GetActiveObject(progId);
+            _kompas = null;
+            if (_kompas == null)
+            {
+                //Так как нету запущенной копии, то запускаем Компас 3д сами
+                _kompas = (KompasObject)Activator.CreateInstance(t);
+            }
 
-            //if (_kompas != null)
-            //{
-            //    _kompas.Visible = true;
-            //    _kompas.ActivateControllerAPI();
-            //}
+            if (_kompas != null)
+            {
+                _kompas.Visible = true;
+                _kompas.ActivateControllerAPI();
+            }
             //Возможно понадобиться выкидывать исключение, что не получили ссылку на Компас 3д
         }
 
@@ -73,7 +73,7 @@ namespace FotoFrameModel
                 throw new InvalidOperationException(msg);
             }
 
-            _halfX = photoFrame.OuterHeight / 2.0f;
+            _halfX = 0;
             _halfY = _halfX;
 
             var doc = (ksDocument3D)_kompas.Document3D();
@@ -118,9 +118,35 @@ namespace FotoFrameModel
             var h1 = photoFrame.OuterHeight;
             var h2 = photoFrame.InnerHeight;
             var h = photoFrame.Interval;
+
             var Ax = _halfX;
             var Ay = _halfY;
 
+            var Bx = Ax;
+            var By = Ay + h1;
+
+            var h3 = (h1 - h2) / 2;
+
+            var Dx = Ax + h;
+            var Dy = Ay + h3;
+
+            var Cx = Dx;
+            var Cy = Dy + h2;
+
+            var groupRightId = draw.ksNewGroup(0);
+
+            draw.ksLineSeg(Ax, Ay, Bx, By, 1);
+            draw.ksLineSeg(Bx, By, Cx, Cy, 1);
+            draw.ksLineSeg(Cx, Cy, Dx, Dy, 1);
+            draw.ksLineSeg(Dx, Dy, Ax, Ay, 1);
+
+            draw.ksEndObj();
+
+            Ax += photoFrame.OuterWidth / 2;
+            Bx = Ax;
+
+            //симметричное отображение трапеции
+            draw.ksSymmetryObj(groupRightId, Ax, Ay, Bx, By, "1");
 
             sketchDef.EndEdit();
 
@@ -144,6 +170,93 @@ namespace FotoFrameModel
             var depthExtrusion = photoFrame.OuterLength;
             var angle = 0.0f;
             extrDef.SetSideParam(true,
+                                 (short)End_Type.etBlind,
+                                 depthExtrusion,
+                                 angle,
+                                 false);
+            extrDef.SetSketch(sketch);
+            extr.Create();
+
+            var basePlaneWidth = (ksEntity)part.GetDefaultEntity(
+                (short)Obj3dType.o3d_planeYOZ);
+
+            GenerateOnWidthBlock(basePlaneWidth, photoFrame, part);
+        }
+
+        private void GenerateOnWidthBlock(ksEntity basePlane, IPhotoFrame photoFrame, ksPart part)
+        {
+            var sketch = (ksEntity)part.NewEntity((short)Obj3dType.o3d_sketch);
+            if (sketch == null)
+            {
+                return;
+            }
+            sketch.name = "Эскиз бруска стороны по ширине";
+
+            var sketchDef = (ksSketchDefinition)sketch.GetDefinition();
+            if (sketchDef == null)
+            {
+                return;
+            }
+            sketchDef.SetPlane(basePlane);
+            sketch.Create();
+
+            var draw = (ksDocument2D)sketchDef.BeginEdit();
+
+            var h1 = photoFrame.OuterHeight;
+            var h2 = photoFrame.InnerHeight;
+            var h = photoFrame.Interval;
+
+            var Ax = _halfX - photoFrame.OuterLength;
+            var Ay = _halfY - photoFrame.OuterHeight;
+
+            var Bx = Ax;
+            var By = Ay + h1;
+
+            var h3 = (h1 - h2) / 2;
+
+            var Dx = Ax + h;
+            var Dy = Ay + h3;
+
+            var Cx = Dx;
+            var Cy = Dy + h2;
+
+            var groupRightId = draw.ksNewGroup(0);
+
+            draw.ksLineSeg(Ax, Ay, Bx, By, 1);
+            draw.ksLineSeg(Bx, By, Cx, Cy, 1);
+            draw.ksLineSeg(Cx, Cy, Dx, Dy, 1);
+            draw.ksLineSeg(Dx, Dy, Ax, Ay, 1);
+
+            draw.ksEndObj();
+
+            Ax += photoFrame.OuterLength / 2;
+            Bx = Ax;
+
+            //симметричное отображение трапеции
+            draw.ksSymmetryObj(groupRightId, Ax, Ay, Bx, By, "1");
+
+            sketchDef.EndEdit();
+
+            var extr = (ksEntity)part.NewEntity(
+                (short)Obj3dType.o3d_bossExtrusion);
+            if (extr == null)
+            {
+                return;
+            }
+            extr.name = "Выдавить брусок по ширине";
+
+            var extrDef = (ksBossExtrusionDefinition)extr.GetDefinition();
+            extrDef.SetSketch(sketch);
+            if (extrDef == null)
+            {
+                return;
+            }
+
+            extrDef.directionType = (short)Direction_Type.dtReverse;
+
+            var depthExtrusion = photoFrame.OuterWidth;
+            var angle = 0.0f;
+            extrDef.SetSideParam(false,
                                  (short)End_Type.etBlind,
                                  depthExtrusion,
                                  angle,
