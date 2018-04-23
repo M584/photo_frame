@@ -30,24 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Kompas6API2D5COM">
-      <HintPath>bin\libs\Kompas6API2D5COM.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Kompas6API3D5COM">
-      <HintPath>bin\libs\Kompas6API3D5COM.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="Kompas6API5">
-      <HintPath>bin\libs\Kompas6API5.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Kompas6Constants">
-      <HintPath>bin\libs\Kompas6Constants.dll</HintPath>
+      <HintPath>libs\Kompas6API5.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Kompas6Constants3D">
-      <HintPath>bin\libs\Kompas6Constants3D.dll</HintPath>
+      <HintPath>libs\Kompas6Constants3D.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />

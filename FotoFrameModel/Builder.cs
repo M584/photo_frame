@@ -1,8 +1,7 @@
-﻿using Kompas6Constants3D;
-using Kompas6API5;
+﻿using Kompas6API5;
+using Kompas6Constants3D;
 using System;
 using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace FotoFrameModel
 {
