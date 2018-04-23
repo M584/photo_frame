@@ -63,13 +63,34 @@ namespace FotoFrameModel
     /// </summary>
     public class PhotoFrameTemplate : IPhotoFrame, IChecker
     {
+        /// <summary>
+        /// Внешняя ширина
+        /// </summary>
         private BorderConditions _outerWidth;
+
+        /// <summary>
+        /// Внешняя высота
+        /// </summary>
         private BorderConditions _outerHeight;
+
+        /// <summary>
+        /// Внешняя длина
+        /// </summary>
         private BorderConditions _outerLength;
+
+        /// <summary>
+        /// Внутренняя высота
+        /// </summary>
         private BorderConditions _innerHeight;
+        
+        /// <summary>
+        /// Расстояние между внутренней и внешней стороной фоторамки
+        /// </summary>
         private BorderConditions _interval;
 
+
         private delegate double SetValue(double value);
+
         /// <summary>
         /// Словарь с методами для проверки требований 
         ///     параметров фоторамки:
@@ -419,8 +440,19 @@ namespace FotoFrameModel
     /// </summary>
     public class BorderConditions
     {
+        /// <summary>
+        /// Минимальная граница для значения параметра
+        /// </summary>
         private double _minimum = 0.0f;
+
+        /// <summary>
+        /// Максимальная граница для значения параметра
+        /// </summary>
         private double _maximum = 0.0f;
+
+        /// <summary>
+        /// Значение параметра
+        /// </summary>
         private double _value = 0.0f;
 
         /// <summary>
