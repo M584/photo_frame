@@ -1,0 +1,116 @@
+﻿<Window x:Class="FotoFrameViewVM.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FotoFrameViewVM"
+        mc:Ignorable="d"
+        Title="Построитель фоторамок" Height="250" Width="260" ResizeMode="NoResize">
+    <Window.Resources>
+        <local:PhotoFrameViewModel x:Key="PhotoFrame"/>
+    </Window.Resources>
+    <StackPanel Margin="5" Width="230" DataContext="{StaticResource PhotoFrame}">
+        <StackPanel.Resources>
+            <Style TargetType="HeaderedContentControl">
+                <Setter Property="Margin" Value="3"/>
+                <Setter Property="Focusable" Value="False"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="HeaderedContentControl">
+                            <DockPanel LastChildFill="False">
+                                <ContentPresenter ContentSource="Header" DockPanel.Dock="Left" 
+                                  Focusable="False" VerticalAlignment="Center"/>
+                                <ContentPresenter ContentSource="Content" Margin="5,0,0,0" 
+                                  DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                            </DockPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="Width" Value="100"/>
+                <Setter Property="Margin" Value="10,15,15,15"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+            </Style>
+
+            <Style x:Key="TextBoxInError" TargetType="TextBox">
+                <Style.Triggers>
+                    <Trigger Property="Validation.HasError" Value="true">
+                        <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </StackPanel.Resources>
+
+        <HeaderedContentControl Header="Внешняя ширина:">
+            <TextBox Width="80" Style="{StaticResource TextBoxInError}">
+                <TextBox.Text>
+                    <Binding Path="OuterWidth"  Mode="TwoWay"
+                         ValidatesOnExceptions="True"
+                         UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </HeaderedContentControl>
+        <HeaderedContentControl Header="Внешняя высота:">
+            <TextBox Width="80" Style="{StaticResource TextBoxInError}">
+                <TextBox.Text>
+                    <Binding Path="OuterHeight"  Mode="TwoWay"
+                         ValidatesOnExceptions="True"
+                         UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </HeaderedContentControl>
+        <HeaderedContentControl Header="Внешняя длина:">
+            <TextBox Width="80" Style="{StaticResource TextBoxInError}">
+                <TextBox.Text>
+                    <Binding Path="OuterLength"  Mode="TwoWay"
+                         ValidatesOnExceptions="True"
+                         UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </HeaderedContentControl>
+        <HeaderedContentControl Header="Внутренняя высота:">
+            <TextBox Width="80" Style="{StaticResource TextBoxInError}">
+                <TextBox.Text>
+                    <Binding Path="InnerHeight"  Mode="TwoWay"
+                         ValidatesOnExceptions="True"
+                         UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </HeaderedContentControl>
+        <HeaderedContentControl Header="Расстояние между&#10;внутренней и внешней&#10;частями:" >
+            <TextBox Width="80" Style="{StaticResource TextBoxInError}">
+                <TextBox.Text>
+                    <Binding Path="Interval"  Mode="TwoWay"
+                         ValidatesOnExceptions="True"
+                         UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </HeaderedContentControl>
+
+        <Button IsDefault="True" Click="Button_Click">Построить</Button>
+    </StackPanel>
+</Window>
