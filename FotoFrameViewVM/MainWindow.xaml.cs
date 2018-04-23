@@ -20,9 +20,12 @@ namespace FotoFrameViewVM
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string _nameProgram = "Построитель фоторамки";
+
         public MainWindow()
         {
             InitializeComponent();
+            this.Title = _nameProgram;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -37,7 +40,7 @@ namespace FotoFrameViewVM
                 : MessageBoxImage.Warning;
 
             MessageBox.Show(msg,
-                "Построитель фоторамок",
+                _nameProgram,
                 MessageBoxButton.OK,
                 typeMessage);
         }
