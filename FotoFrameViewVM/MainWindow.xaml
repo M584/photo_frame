@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FotoFrameViewVM"
         mc:Ignorable="d"
-        Title="Построитель фоторамок" Height="235" Width="260" ResizeMode="NoResize">
+        Title="Построитель фоторамок" Height="250" Width="260" ResizeMode="NoResize">
     <Window.Resources>
         <local:PhotoFrameViewModel x:Key="PhotoFrame"/>
     </Window.Resources>
