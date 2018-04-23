@@ -137,38 +137,11 @@ namespace FotoFrameModel
 
             var draw = (ksDocument2D)sketchDef.BeginEdit();
 
-            var h1 = photoFrame.OuterHeight;
-            var h2 = photoFrame.InnerHeight;
-            var h = photoFrame.Interval;
+            var offsetX = 0;
+            var offsetY = 0;
+            var dx = photoFrame.OuterWidth;
 
-            var Ax = _halfX;
-            var Ay = _halfY;
-
-            var Bx = Ax;
-            var By = Ay + h1;
-
-            var h3 = (h1 - h2) / 2;
-
-            var Dx = Ax + h;
-            var Dy = Ay + h3;
-
-            var Cx = Dx;
-            var Cy = Dy + h2;
-
-            var groupRightId = draw.ksNewGroup(0);
-
-            draw.ksLineSeg(Ax, Ay, Bx, By, 1);
-            draw.ksLineSeg(Bx, By, Cx, Cy, 1);
-            draw.ksLineSeg(Cx, Cy, Dx, Dy, 1);
-            draw.ksLineSeg(Dx, Dy, Ax, Ay, 1);
-
-            draw.ksEndObj();
-
-            Ax += photoFrame.OuterWidth / 2;
-            Bx = Ax;
-
-            //симметричное отображение трапеции
-            draw.ksSymmetryObj(groupRightId, Ax, Ay, Bx, By, "1");
+            DrawSketchBlock(photoFrame, draw, offsetX, offsetY, dx);
 
             sketchDef.EndEdit();
 
@@ -197,16 +170,16 @@ namespace FotoFrameModel
                                  angle,
                                  false);
             extrDef.SetSketch(sketch);
-            extr.Create();
+            extr.Create();            
 
-            var basePlaneWidth = (ksEntity)part.GetDefaultEntity(
-                (short)Obj3dType.o3d_planeYOZ);
-
-            GenerateOnWidthBlock(basePlaneWidth, photoFrame, part);
+            GenerateOnWidthBlock(photoFrame, part);
         }
 
-        private void GenerateOnWidthBlock(ksEntity basePlane, IPhotoFrame photoFrame, ksPart part)
+        private void GenerateOnWidthBlock(IPhotoFrame photoFrame, ksPart part)
         {
+            var basePlane = (ksEntity)part.GetDefaultEntity(
+                (short)Obj3dType.o3d_planeYOZ);
+
             var sketch = (ksEntity)part.NewEntity((short)Obj3dType.o3d_sketch);
             if (sketch == null)
             {
@@ -224,38 +197,12 @@ namespace FotoFrameModel
 
             var draw = (ksDocument2D)sketchDef.BeginEdit();
 
-            var h1 = photoFrame.OuterHeight;
-            var h2 = photoFrame.InnerHeight;
-            var h = photoFrame.Interval;
 
-            var Ax = _halfX - photoFrame.OuterLength;
-            var Ay = _halfY - photoFrame.OuterHeight;
+            var offsetX = photoFrame.OuterLength;
+            var offsetY = photoFrame.OuterHeight;
+            var dx = photoFrame.OuterLength;
 
-            var Bx = Ax;
-            var By = Ay + h1;
-
-            var h3 = (h1 - h2) / 2;
-
-            var Dx = Ax + h;
-            var Dy = Ay + h3;
-
-            var Cx = Dx;
-            var Cy = Dy + h2;
-
-            var groupRightId = draw.ksNewGroup(0);
-
-            draw.ksLineSeg(Ax, Ay, Bx, By, 1);
-            draw.ksLineSeg(Bx, By, Cx, Cy, 1);
-            draw.ksLineSeg(Cx, Cy, Dx, Dy, 1);
-            draw.ksLineSeg(Dx, Dy, Ax, Ay, 1);
-
-            draw.ksEndObj();
-
-            Ax += photoFrame.OuterLength / 2;
-            Bx = Ax;
-
-            //симметричное отображение трапеции
-            draw.ksSymmetryObj(groupRightId, Ax, Ay, Bx, By, "1");
+            DrawSketchBlock(photoFrame, draw, offsetX, offsetY, dx);
 
             sketchDef.EndEdit();
 
@@ -285,6 +232,52 @@ namespace FotoFrameModel
                                  false);
             extrDef.SetSketch(sketch);
             extr.Create();
+        }
+
+        /// <summary>
+        /// Нарисовать эскиз двух зеркальных блоков для фоторамки
+        /// </summary>
+        /// <param name="photoFrame">Шаблон фоторамки</param>
+        /// <param name="draw">Документ эскиза</param>
+        /// <param name="offsetX">Смещение по OX для начальной точки</param>
+        /// <param name="offsetY">Смещение по OY для начальной точки</param>
+        /// <param name="dx">Расстояние между начальными точками по OX
+        ///     отрисовки брусков</param>
+        private void DrawSketchBlock(IPhotoFrame photoFrame,
+            ksDocument2D draw, double offsetX, double offsetY, double dx)
+        {
+            var h1 = photoFrame.OuterHeight;
+            var h2 = photoFrame.InnerHeight;
+            var h = photoFrame.Interval;
+
+            var Ax = _halfX - offsetX;
+            var Ay = _halfY - offsetY;
+
+            var Bx = Ax;
+            var By = Ay + h1;
+
+            var h3 = (h1 - h2) / 2;
+
+            var Dx = Ax + h;
+            var Dy = Ay + h3;
+
+            var Cx = Dx;
+            var Cy = Dy + h2;
+
+            var groupRightId = draw.ksNewGroup(0);
+
+            draw.ksLineSeg(Ax, Ay, Bx, By, 1);
+            draw.ksLineSeg(Bx, By, Cx, Cy, 1);
+            draw.ksLineSeg(Cx, Cy, Dx, Dy, 1);
+            draw.ksLineSeg(Dx, Dy, Ax, Ay, 1);
+
+            draw.ksEndObj();
+
+            Ax += dx / 2;
+            Bx = Ax;
+
+            //симметричное отображение трапеции
+            draw.ksSymmetryObj(groupRightId, Ax, Ay, Bx, By, "1");
         }
     }
 }
