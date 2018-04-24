@@ -147,7 +147,6 @@ namespace FotoFrameViewVM
         {
             get
             {
-                //TODO: заменить на реализацию проверки параметра
                 return String.Empty;
             }
         }
