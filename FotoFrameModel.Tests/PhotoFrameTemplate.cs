@@ -20,7 +20,6 @@ namespace FotoFrameModel.Tests
         private PhotoFrameTemplate _photoFrame;
         private IChecker _checker;
         private IPhotoFrame _frame;
-        private IBuilder _builder;
 
         [SetUp]
         public void Setup()
@@ -28,7 +27,6 @@ namespace FotoFrameModel.Tests
             _photoFrame = GeneratePhotoFrameTemplate();
             _checker = _photoFrame as IChecker;
             _frame = _photoFrame as IPhotoFrame;
-            _builder = new BuilderPhotoFrame();
         }
 
         public static PhotoFrameTemplate GeneratePhotoFrameTemplate()
@@ -237,10 +235,6 @@ namespace FotoFrameModel.Tests
             {
                 CheckParamsTestPositive(outerWidth, outerLength,
                         interval, outerHeight, innerHeight, expected);
-                Assert.Throws<InvalidOperationException>(() =>
-                {
-                    _builder.Build(_frame, _checker);
-                });
             });
         }
 
