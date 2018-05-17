@@ -29,6 +29,10 @@ namespace FotoFrameModel.Tests
             _frame = _photoFrame as IPhotoFrame;
         }
 
+        /// <summary>
+        /// Создать экземпляр класса PhotoFrameTemplate.
+        /// </summary>
+        /// <returns>Возвращает экземпляр класса PhotoFrameTemplate.</returns>
         public static PhotoFrameTemplate GeneratePhotoFrameTemplate()
         {
             var outerWidth = new BorderConditions(_minForLengthAndWidth,
@@ -72,11 +76,25 @@ namespace FotoFrameModel.Tests
             });
         }
 
+        /// <summary>
+        /// Посчитать внутреннюю ширину фоторамки.
+        /// </summary>
+        /// <param name="outerWidth">Внешняя ширина фоторамки.</param>
+        /// <param name="interval">Расстояние между
+        ///     внешней и внутренней шириной фоторамки.</param>
+        /// <returns>Возвращает значение внутренней ширины фоторамки.</returns>
         private double CalcInnerWidth(double outerWidth, double interval)
         {
             return outerWidth - 2 * interval;
         }
 
+        /// <summary>
+        /// Посчитать внутреннюю длину фоторамки.
+        /// </summary>
+        /// <param name="outerWidth">Внешняя длина фоторамки.</param>
+        /// <param name="interval">Расстояние между
+        ///     внешней и внутренней длиной фоторамки.</param>
+        /// <returns>Возвращает значение внутренней длины фоторамки.</returns>
         private double CalcInnerLength(double outerLength, double interval)
         {
             return CalcInnerWidth(outerLength, interval);
@@ -84,17 +102,25 @@ namespace FotoFrameModel.Tests
 
         [Test(Description = "Inner length property test positive")]
         [TestCase(_max, (_minHeight + _maxInterval) / 2.0f,
-            TestName = "Inner length > outerLength," +
+            TestName = "Outer length > inner length," +
                 " interval = average value")]
         [TestCase(_max, _minHeight,
-            TestName = "Inner length > outerLength," +
+            TestName = "Outer length > inner length," +
                 " interval = MinValue")]
-        [TestCase(_minForLengthAndWidth + 2, _minHeight,
-            TestName = "Inner length > outerLength," +
+        [TestCase(_max, _maxInterval,
+            TestName = "Outer length > inner length," +
+                " outerLength = max, interval = max")]
+        [TestCase(_minForLengthAndWidth, _minHeight,
+            TestName = "Outer length > inner length," +
                 " outerLength = min, interval = min")]
         [TestCase(_minForLengthAndWidth, (_minHeight + _maxInterval) / 2.0f,
-            TestName = "Inner length > outerLength," +
+            TestName = "Outer length > inner length," +
                 " outerLength = min, interval = average value")]
+        [TestCase((_minForLengthAndWidth + _max) / 2.0f,
+                (_minHeight + _maxInterval) / 2.0f,
+                    TestName = "Outer length > inner length," +
+                        "interval, outerLenght " +
+                            "= average value")]
         public void InnerLengthTestPositive(double outerLength,
             double interval)
         {
@@ -116,7 +142,7 @@ namespace FotoFrameModel.Tests
 
         [Test(Description = "Inner length property test negative")]
         [TestCase(_minForLengthAndWidth, _maxInterval,
-            TestName = "Catch exception out of range inner length")]
+            TestName = "Catch exception out of range outer length")]
         public void InnerLengthTestNegative(double outerLength,
             double interval)
         {
@@ -140,17 +166,24 @@ namespace FotoFrameModel.Tests
 
         [Test(Description = "Inner width property test positive")]
         [TestCase(_max, (_minHeight + _maxInterval) / 2.0f,
-            TestName = "Inner width > outer width," +
+            TestName = "Outer width > inner width," +
                 " interval = average value")]
         [TestCase(_max, _minHeight,
-            TestName = "Inner width > outer width," +
+            TestName = "Outer width > inner width," +
                 " interval = MinValue")]
+        [TestCase(_max, _maxInterval,
+            TestName = "Outer width > inner width," +
+                " outerWidth = max, interval = max")]
         [TestCase(_minForLengthAndWidth, _minHeight,
-            TestName = "Inner width > outer width," +
-                " outerLength = min, interval = min")]
-        [TestCase(_minForLengthAndWidth, ((_minHeight + _maxInterval) / 2.0f),
-            TestName = "Inner width > outer width," +
+            TestName = "Outer width > inner width," +
+                " outerWidth = min, interval = min")]
+        [TestCase(_minForLengthAndWidth, (_minHeight + _maxInterval) / 2.0f,
+            TestName = "Outer width > inner width," +
                 " outerWidth = min, interval = average value")]
+        [TestCase((_minForLengthAndWidth + _max) / 2.0f,
+                (_minHeight + _maxInterval) / 2.0f,
+                    TestName = "Outer width > inner width," +
+                        "interval, outerWidth = average value")]
         public void InnerWidthTestPositive(double outerWidth,
             double interval)
         {
@@ -227,7 +260,7 @@ namespace FotoFrameModel.Tests
                 " outer length less than 2x interval")]
         [TestCase(_norm, _norm, 1, _norm, _norm + 10.0f, false,
             TestName = "Outer height < inner height")]
-        public void CheckAllStepsValidationParametersPhotoFrameNegative(
+        public void CheckParamsTestNegative(
             double outerWidth, double outerLength, double interval,
                 double outerHeight, double innerHeight, bool expected)
         {
@@ -262,6 +295,18 @@ namespace FotoFrameModel.Tests
             Assert.AreEqual(expected, _photoFrame.IsValid);
         }
 
+        /// <summary>
+        /// Упаковать параметры фоторамки в список пар в виде
+        ///     (название параметра, свойство параметра)
+        /// </summary>
+        /// <param name="outerWidth">Внешняя ширина фоторамки.</param>
+        /// <param name="outerLength">Внешняя длина фоторамки.</param>
+        /// <param name="interval">Расстояние между внешними и внутренними
+        ///     параметрами(шириной и длиной) фоторамки.</param>
+        /// <param name="outerHeight">Внешняя высота фоторамки.</param>
+        /// <param name="innerHeight">Внутрення высота фоторамки.</param>
+        /// <returns>Возвращает список пар в виде
+        ///     (название параметра, свойство параметра)</returns>
         private List<Tuple<string, double, SetValue>> GetListParams(double outerWidth,
             double outerLength, double interval, double outerHeight,
                 double innerHeight)
@@ -284,20 +329,6 @@ namespace FotoFrameModel.Tests
                     nameof(_photoFrame.InnerHeight), innerHeight,
                         ((double value) => _photoFrame.InnerHeight = value))
             };
-        }
-
-        private void SetParameters(ref
-            List<Tuple<string, double, SetValue>> parameters)
-        {
-            foreach (var p in parameters)
-            {
-                try
-                {
-                    p.Item3(p.Item2);
-                }
-                catch (ArgumentException)
-                { }
-            }
         }
     }
 }
