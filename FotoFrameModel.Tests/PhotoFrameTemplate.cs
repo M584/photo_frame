@@ -84,17 +84,25 @@ namespace FotoFrameModel.Tests
 
         [Test(Description = "Inner length property test positive")]
         [TestCase(_max, (_minHeight + _maxInterval) / 2.0f,
-            TestName = "Inner length > outerLength," +
+            TestName = "Outer length > inner length," +
                 " interval = average value")]
         [TestCase(_max, _minHeight,
-            TestName = "Inner length > outerLength," +
+            TestName = "Outer length > inner length," +
                 " interval = MinValue")]
-        [TestCase(_minForLengthAndWidth + 2, _minHeight,
-            TestName = "Inner length > outerLength," +
+        [TestCase(_max, _maxInterval,
+            TestName = "Outer length > inner length," +
+                " outerLength = max, interval = max")]
+        [TestCase(_minForLengthAndWidth, _minHeight,
+            TestName = "Outer length > inner length," +
                 " outerLength = min, interval = min")]
         [TestCase(_minForLengthAndWidth, (_minHeight + _maxInterval) / 2.0f,
-            TestName = "Inner length > outerLength," +
+            TestName = "Outer length > inner length," +
                 " outerLength = min, interval = average value")]
+        [TestCase((_minForLengthAndWidth + _max) / 2.0f,
+                (_minHeight + _maxInterval) / 2.0f,
+                    TestName = "Outer length > inner length," +
+                        " outerLength = min, interval, outerLenght " +
+                            "= average value")]
         public void InnerLengthTestPositive(double outerLength,
             double interval)
         {
@@ -116,7 +124,7 @@ namespace FotoFrameModel.Tests
 
         [Test(Description = "Inner length property test negative")]
         [TestCase(_minForLengthAndWidth, _maxInterval,
-            TestName = "Catch exception out of range inner length")]
+            TestName = "Catch exception out of range outer length")]
         public void InnerLengthTestNegative(double outerLength,
             double interval)
         {
@@ -138,18 +146,18 @@ namespace FotoFrameModel.Tests
 
         }
 
-        [Test(Description = "Inner width property test positive")]
+        [Test(Description = "Outer width property test positive")]
         [TestCase(_max, (_minHeight + _maxInterval) / 2.0f,
-            TestName = "Inner width > outer width," +
+            TestName = "Outer width > inner width," +
                 " interval = average value")]
         [TestCase(_max, _minHeight,
-            TestName = "Inner width > outer width," +
+            TestName = "Outer width > inner width," +
                 " interval = MinValue")]
         [TestCase(_minForLengthAndWidth, _minHeight,
-            TestName = "Inner width > outer width," +
-                " outerLength = min, interval = min")]
+            TestName = "Outer width > inner width," +
+                " outerWidth = min, interval = min")]
         [TestCase(_minForLengthAndWidth, ((_minHeight + _maxInterval) / 2.0f),
-            TestName = "Inner width > outer width," +
+            TestName = "Outer width > inner width," +
                 " outerWidth = min, interval = average value")]
         public void InnerWidthTestPositive(double outerWidth,
             double interval)
@@ -170,7 +178,7 @@ namespace FotoFrameModel.Tests
             });
         }
 
-        [Test(Description = "Inner width property test negative")]
+        [Test(Description = "Outer width property test negative")]
         [TestCase(_minForLengthAndWidth, _maxInterval,
             TestName = "Catch exception out of range inner width")]
         public void InnerWidthTestNegative(double outerWidth,
