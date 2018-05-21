@@ -5,12 +5,25 @@ using FotoFrameModel;
 
 namespace FotoFrameViewVM
 {
+    /// <summary>
+    /// Представление модели фоторамки.
+    /// </summary>
     public class PhotoFrameViewModel : INotifyPropertyChanged,
         IDataErrorInfo
     {
-        private PhotoFrameTemplate _photoFrame;
+        /// <summary>
+        /// Шаблон фоторамки.
+        /// </summary>
+        private IPhotoFrame _photoFrame;
+
+        /// <summary>
+        /// Построитель фоторамки.
+        /// </summary>
         private IBuilder _builder;
 
+        /// <summary>
+        /// Инициализация параметров представления модели.
+        /// </summary>
         public PhotoFrameViewModel()
         {
             const double minHeight = 1.0f;
@@ -39,6 +52,9 @@ namespace FotoFrameViewVM
             _builder = new BuilderPhotoFrame();
         }
 
+        /// <summary>
+        /// Внешняя ширина фоторамки.
+        /// </summary>
         public double OuterWidth
         {
             get
@@ -54,6 +70,9 @@ namespace FotoFrameViewVM
             }
         }
 
+        /// <summary>
+        /// Внешняя высота фоторамки.
+        /// </summary>
         public double OuterHeight
         {
             get
@@ -68,6 +87,9 @@ namespace FotoFrameViewVM
             }
         }
 
+        /// <summary>
+        /// Внешняя длина фоторамки.
+        /// </summary>
         public double OuterLength
         {
             get
@@ -83,6 +105,9 @@ namespace FotoFrameViewVM
             }
         }
 
+        /// <summary>
+        /// Внутренняя высота фоторамки.
+        /// </summary>
         public double InnerHeight
         {
             get
@@ -97,6 +122,10 @@ namespace FotoFrameViewVM
             }
         }
 
+        /// <summary>
+        /// Расстояние между внутренними и 
+        ///     внешними параметрами фоторамки (длиной и шириной).
+        /// </summary>
         public double Interval
         {
             get
@@ -113,6 +142,11 @@ namespace FotoFrameViewVM
             }
         }
 
+        /// <summary>
+        /// Построить модель фоторамки по шаблонки.
+        /// </summary>
+        /// <returns>Возвращает удалось 
+        /// или нет построить модель фоторамки в САПР.</returns>
         public bool BuildModel()
         {
             var resultBuilding = true;
