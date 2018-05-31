@@ -152,8 +152,7 @@ namespace FotoFrameViewVM
             var resultBuilding = true;
             try
             {
-                _builder.Build(_photoFrame as IPhotoFrame,
-                _photoFrame as IChecker);
+                _builder.Build(_photoFrame);
             }
             catch (InvalidOperationException)
             {

@@ -4,19 +4,6 @@ using System.Collections.Generic;
 namespace FotoFrameModel
 {
     /// <summary>
-    /// Интерфейс для проверки параметров фоторамки 
-    ///     на требования предметной области.
-    /// </summary>
-    public interface IChecker
-    {
-        /// <summary>
-        /// Проверяет удовлетворяют ли параметры фоторамки
-        ///     требованиям предметной области.
-        /// </summary>
-        bool IsValid { get; }
-    }
-
-    /// <summary>
     /// Интерфейс параметров фоторамки.
     /// </summary>
     public interface IPhotoFrame
@@ -56,12 +43,19 @@ namespace FotoFrameModel
         /// Внутренняя длина фоторамки.
         /// </summary>
         double InnerLength { get; }
+
+        /// <summary>
+        /// Проверяет удовлетворяют ли параметры фоторамки
+        ///     требованиям предметной области.
+        /// </summary>
+        bool IsValid { get; }
     }
+
 
     /// <summary>
     /// Шаблон фоторамки
     /// </summary>
-    public class PhotoFrameTemplate : IPhotoFrame, IChecker
+    public class PhotoFrameTemplate : IPhotoFrame
     {
         /// <summary>
         /// Внешняя ширина

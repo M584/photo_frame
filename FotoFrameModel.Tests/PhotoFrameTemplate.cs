@@ -18,14 +18,12 @@ namespace FotoFrameModel.Tests
         private const double _norm = _minForLengthAndWidth;
 
         private PhotoFrameTemplate _photoFrame;
-        private IChecker _checker;
         private IPhotoFrame _frame;
 
         [SetUp]
         public void Setup()
         {
             _photoFrame = GeneratePhotoFrameTemplate();
-            _checker = _photoFrame as IChecker;
             _frame = _photoFrame as IPhotoFrame;
         }
 
