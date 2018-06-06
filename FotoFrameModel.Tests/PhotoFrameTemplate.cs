@@ -17,15 +17,13 @@ namespace FotoFrameModel.Tests
         private const double _biggest = _max + 1000.0f;
         private const double _norm = _minForLengthAndWidth;
 
-        private PhotoFrameTemplate _photoFrame;
-        private IChecker _checker;
+        private PhotoFrame _photoFrame;
         private IPhotoFrame _frame;
 
         [SetUp]
         public void Setup()
         {
             _photoFrame = GeneratePhotoFrameTemplate();
-            _checker = _photoFrame as IChecker;
             _frame = _photoFrame as IPhotoFrame;
         }
 
@@ -33,7 +31,7 @@ namespace FotoFrameModel.Tests
         /// Создать экземпляр класса PhotoFrameTemplate.
         /// </summary>
         /// <returns>Возвращает экземпляр класса PhotoFrameTemplate.</returns>
-        public static PhotoFrameTemplate GeneratePhotoFrameTemplate()
+        public static PhotoFrame GeneratePhotoFrameTemplate()
         {
             var outerWidth = new BorderConditions(_minForLengthAndWidth,
                 _max, _max);
@@ -46,7 +44,7 @@ namespace FotoFrameModel.Tests
             var interval = new BorderConditions(_minHeight,
                 _value, _maxInterval);
 
-            return new PhotoFrameTemplate(outerWidth,
+            return new PhotoFrame(outerWidth,
                 outerHeight,
                 outerLength,
                 innerHeight,
