@@ -55,7 +55,7 @@ namespace FotoFrameModel
     /// <summary>
     /// Шаблон фоторамки
     /// </summary>
-    public class PhotoFrameTemplate : IPhotoFrame
+    public class PhotoFrame : IPhotoFrame
     {
         /// <summary>
         /// Внешняя ширина
@@ -106,7 +106,7 @@ namespace FotoFrameModel
         /// <param name="interval">Граничные условия
         ///     для расстояния между внутренней и внешней частями
         ///     фоторамки.</param>
-        public PhotoFrameTemplate(
+        public PhotoFrame(
             BorderConditions outerWidth,
             BorderConditions outerHeight,
             BorderConditions outerLength,

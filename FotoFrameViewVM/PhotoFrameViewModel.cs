@@ -43,7 +43,7 @@ namespace FotoFrameViewVM
             var interval = new BorderConditions(minHeight,
                 value, maxInterval);
 
-            _photoFrame = new PhotoFrameTemplate(outerWidth,
+            _photoFrame = new PhotoFrame(outerWidth,
                 outerHeight,
                 outerLength,
                 innerHeight,
