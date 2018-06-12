@@ -109,6 +109,29 @@ namespace FotoFrameModel
         }
 
         /// <summary>
+        /// Создание смещенной плоскости
+        /// </summary>
+        /// <param name="part">Компонент сборки</param>
+        /// <param name="basePlane">Исходная плоскость</param>
+        /// <param name="offset">Смещение</param>
+        /// <returns>Возвращает смещенную плоскость</returns>
+        public ksEntity CreateOffsetPlane(ksPart part, ksEntity basePlane,
+            double offset)
+        {
+            ksEntity planeFormSurface =
+                part.NewEntity((short)Obj3dType.o3d_planeOffset);
+            ksPlaneOffsetDefinition planeDefinition =
+                planeFormSurface.GetDefinition();
+
+            planeDefinition.SetPlane(basePlane);
+            planeDefinition.offset = offset;
+
+            planeFormSurface.Create();
+
+            return planeFormSurface;
+        }
+
+        /// <summary>
         /// Построить модель фоторамки в САПР Компас 3D
         /// </summary>
         /// <param name="photoFrame">Шаблон фоторамки</param>
@@ -152,9 +175,10 @@ namespace FotoFrameModel
         private void GenerateStand()
         {
             var basePlane = (ksEntity)_part.GetDefaultEntity(
-               (short)Obj3dType.o3d_planeYOZ);
+               (short)Obj3dType.o3d_planeXOZ);
 
-            var sketch = (ksEntity)_part.NewEntity((short)Obj3dType.o3d_sketch);
+            var sketch = (ksEntity)_part.NewEntity(
+                (short)Obj3dType.o3d_sketch);
             if (sketch == null)
             {
                 return;
@@ -166,7 +190,12 @@ namespace FotoFrameModel
             {
                 return;
             }
-            sketchDef.SetPlane(basePlane);
+
+            var offset = _photoFrame.OuterHeight;
+            var offsetPlane = CreateOffsetPlane(
+                _part, basePlane, offset);
+
+            sketchDef.SetPlane(offsetPlane);
             sketch.Create();
 
             var draw = (ksDocument2D)sketchDef.BeginEdit();
@@ -174,9 +203,9 @@ namespace FotoFrameModel
             var katetA = _photoFrame.OuterWidth * 0.6 / 2;
 
             //координаты начала подставки
-            var startX = _photoFrame.OuterWidth / 2.5;
-            startX = -startX;
-            var startY = 0;
+            var startX = _photoFrame.OuterWidth / 1.5;
+            var startY = _photoFrame.OuterLength / 1.5;
+            startY = -startY;
 
             var cx = startX;
             var cy = startY;
@@ -271,7 +300,7 @@ namespace FotoFrameModel
             var Ay = _startY - offsetY;
 
             var Bx = Ax + dx;
-            var By = Ay - _photoFrame.OuterHeight/10;
+            var By = Ay - _photoFrame.OuterHeight / 10;
 
             draw.ksLineSeg(Ax, Ay, Ax, By, 1);
             draw.ksLineSeg(Ax, Ay, Bx, Ay, 1);
@@ -367,7 +396,7 @@ namespace FotoFrameModel
                 angle,
                 false);
             extrDef.SetSketch(sketch);
-            extr.Create();             
+            extr.Create();
         }
 
         /// <summary>
@@ -464,10 +493,10 @@ namespace FotoFrameModel
             //координаты для точки B
             var Bx = Ax;
             var By = Ay + h1;
-            
+
             //
             var h3 = (h1 - h2) / 2;
-            
+
             //координаты для точки D
             var Dx = Ax + h;
             var Dy = Ay + h3;
