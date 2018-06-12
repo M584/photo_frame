@@ -191,7 +191,8 @@ namespace FotoFrameModel
                 return;
             }
 
-            var offset = _photoFrame.OuterHeight;
+            var offset = _photoFrame.OuterHeight + 
+                _photoFrame.OuterHeight / 10;
             var offsetPlane = CreateOffsetPlane(
                 _part, basePlane, offset);
 
@@ -273,7 +274,7 @@ namespace FotoFrameModel
         private void GenerateSubstrate()
         {
             var basePlane = (ksEntity)_part.GetDefaultEntity(
-                (short)Obj3dType.o3d_planeXOY);
+                (short)Obj3dType.o3d_planeXOZ);
 
             var sketch = (ksEntity)_part.NewEntity((short)Obj3dType.o3d_sketch);
             if (sketch == null)
@@ -287,25 +288,35 @@ namespace FotoFrameModel
             {
                 return;
             }
-            sketchDef.SetPlane(basePlane);
+
+            var offset = _photoFrame.OuterHeight * 0.98;
+            var offsetingPlane = CreateOffsetPlane(
+                _part, basePlane, offset);
+
+            sketchDef.SetPlane(offsetingPlane);
             sketch.Create();
 
             var draw = (ksDocument2D)sketchDef.BeginEdit();
 
             var offsetX = 0;
             var offsetY = 0;
-            var dx = _photoFrame.OuterWidth;
 
-            var Ax = _startX - offsetX;
-            var Ay = _startY - offsetY;
+            var ax = _startX - offsetX;
+            var ay = _startY - offsetY;
 
-            var Bx = Ax + dx;
-            var By = Ay - _photoFrame.OuterHeight / 10;
+            var bx = ax + _photoFrame.OuterWidth;
+            var by = ay;
 
-            draw.ksLineSeg(Ax, Ay, Ax, By, 1);
-            draw.ksLineSeg(Ax, Ay, Bx, Ay, 1);
-            draw.ksLineSeg(Bx, Ay, Bx, By, 1);
-            draw.ksLineSeg(Ax, By, Bx, By, 1);
+            var cx = bx;
+            var cy = by - _photoFrame.OuterLength;
+
+            var dx = ax;
+            var dy = cy;
+
+            draw.ksLineSeg(ax, ay, bx, by, 1);
+            draw.ksLineSeg(bx, by, cx, cy, 1);
+            draw.ksLineSeg(cx, cy, dx, dy, 1);
+            draw.ksLineSeg(dx, dy, ax, ay, 1);
 
             sketchDef.EndEdit();
 
@@ -315,7 +326,7 @@ namespace FotoFrameModel
             {
                 return;
             }
-            extr.name = "Выдавить стенку по длине";
+            extr.name = "Выдавить стенку по внешней высоте";
 
             var extrDef = (ksBossExtrusionDefinition)extr.GetDefinition();
             extrDef.SetSketch(sketch);
@@ -326,7 +337,7 @@ namespace FotoFrameModel
 
             extrDef.directionType = (short)Direction_Type.dtNormal;
 
-            var depthExtrusion = _photoFrame.OuterLength;
+            var depthExtrusion = _photoFrame.OuterHeight / 10;
             var angle = 0.0f;
             extrDef.SetSideParam(true,
                 (short)End_Type.etBlind,
