@@ -301,41 +301,6 @@ namespace FotoFrameModel
             new Dictionary<string, bool>();
 
         /// <summary>
-        /// Проверяет параметр на удовлетворение
-        ///     требованиям предметной области.
-        /// </summary>
-        /// <param name="paramName">Название проверяемого параметра
-        ///     фоторамки.</param>
-        /// <param name="value">Значение проверяемого параметра
-        ///     фоторамки.</param>
-        /// <returns>Возвращает невыполненные требования
-        ///     в проверяемом параметре.</returns>
-        public string ValidateParameter(string paramName, double value)
-        {
-            var result = String.Empty;
-
-            if (_methodsCheck.ContainsKey(paramName))
-            {
-                try
-                {
-                    _methodsCheck[paramName](value);
-                }
-                catch (ArgumentException ex)
-                {
-                    result = ex.Message;
-                }
-                if (_isValidParams.ContainsKey(paramName) == false)
-                {
-                    _isValidParams.Add(paramName, true);
-                }
-                _isValidParams[paramName] =
-                    (result == String.Empty) ? true : false;
-            }
-
-            return result;
-        }
-
-        /// <summary>
         /// Проверяет удовлетворяют ли параметры фоторамки
         ///     требованиям предметной области.
         /// </summary>
@@ -410,7 +375,6 @@ namespace FotoFrameModel
                     nameof(OuterWidth), "ширины");
             }
         }
-
 
         /// <summary>
         /// Внутренняя длина фоторамки.

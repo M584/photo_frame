@@ -6,7 +6,7 @@ using System;
 namespace FotoFrameModel.Tests
 {
     [TestFixture]
-    public class PhotoFrameTemplateTests
+    public class PhotoFrameTests
     {
         private const double _minHeight = 1.0f;
         private const double _minForLengthAndWidth = 10.0f;
@@ -17,21 +17,19 @@ namespace FotoFrameModel.Tests
         private const double _biggest = _max + 1000.0f;
         private const double _norm = _minForLengthAndWidth;
 
-        private PhotoFrame _photoFrame;
-        private IPhotoFrame _frame;
+        private IPhotoFrame _photoFrame;
 
         [SetUp]
         public void Setup()
         {
-            _photoFrame = GeneratePhotoFrameTemplate();
-            _frame = _photoFrame as IPhotoFrame;
+            _photoFrame = GeneratePhoto();
         }
 
         /// <summary>
-        /// Создать экземпляр класса PhotoFrameTemplate.
+        /// Инициализирует параметры экземпляра класса PhotoFrame.
         /// </summary>
-        /// <returns>Возвращает экземпляр класса PhotoFrameTemplate.</returns>
-        public static PhotoFrame GeneratePhotoFrameTemplate()
+        /// <returns>Возвращает экземпляр класса PhotoFrame.</returns>
+        public static PhotoFrame GeneratePhoto()
         {
             var outerWidth = new BorderConditions(_minForLengthAndWidth,
                 _max, _max);
@@ -51,26 +49,24 @@ namespace FotoFrameModel.Tests
                 interval);
         }
 
-        [Test(Description = "PhotoFrameTemlate Constructor Test" +
+        [Test(Description = "PhotoFrame Constructor Test" +
             " on requirements domain model")]
-        public void PhotoFrameTemplateConstructorTest()
+        public void PhotoFrameConstructorTest()
         {
-            var template = _photoFrame;
-
-            var innerWidth = CalcInnerWidth(template.OuterWidth,
-                template.Interval);
-            var innerLength = CalcInnerLength(template.OuterLength,
-                template.Interval);
+            var innerWidth = CalcInnerWidth(_photoFrame.OuterWidth,
+                _photoFrame.Interval);
+            var innerLength = CalcInnerLength(_photoFrame.OuterLength,
+                _photoFrame.Interval);
 
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(_max, template.OuterWidth);
-                Assert.AreEqual(_value, template.OuterHeight);
-                Assert.AreEqual(_max, template.OuterLength);
-                Assert.AreEqual(_value, template.InnerHeight);
-                Assert.AreEqual(_value, template.Interval);
-                Assert.AreEqual(innerLength, template.InnerLength);
-                Assert.AreEqual(innerWidth, template.InnerWidth);
+                Assert.AreEqual(_max, _photoFrame.OuterWidth);
+                Assert.AreEqual(_value, _photoFrame.OuterHeight);
+                Assert.AreEqual(_max, _photoFrame.OuterLength);
+                Assert.AreEqual(_value, _photoFrame.InnerHeight);
+                Assert.AreEqual(_value, _photoFrame.Interval);
+                Assert.AreEqual(innerLength, _photoFrame.InnerLength);
+                Assert.AreEqual(innerWidth, _photoFrame.InnerWidth);
             });
         }
 
@@ -283,7 +279,6 @@ namespace FotoFrameModel.Tests
             {
                 try
                 {
-                    _photoFrame.ValidateParameter(p.Item1, p.Item2);
                     p.Item3(p.Item2);
                 }
                 catch (ArgumentException)
