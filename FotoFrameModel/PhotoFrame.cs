@@ -86,13 +86,6 @@ namespace FotoFrameModel
         private delegate double SetValue(double value);
 
         /// <summary>
-        /// Словарь с методами для проверки требований 
-        ///     параметров фоторамки:
-        ///     название параметра и его метод проверки.
-        /// </summary>
-        private Dictionary<string, SetValue> _methodsCheck;
-
-        /// <summary>
         /// Установка граничных значений для параметров фоторамки.
         /// </summary>
         /// <param name="outerWidth">Граничные условия
@@ -118,20 +111,6 @@ namespace FotoFrameModel
             _outerLength = outerLength;
             _innerHeight = innerHeight;
             _interval = interval;
-
-            _methodsCheck = new Dictionary<string, SetValue>
-            {
-                {nameof(this.OuterHeight),
-                    (double value) => this.OuterHeight = value },
-                {nameof(this.OuterWidth),
-                    (double value) => this.OuterWidth = value },
-                {nameof(this.OuterLength),
-                    (double value) => this.OuterLength = value },
-                {nameof(this.InnerHeight),
-                    (double value) => this.InnerHeight = value },
-                {nameof(this.Interval),
-                    (double value) => this.Interval = value },
-            };
         }
 
         /// <summary>
