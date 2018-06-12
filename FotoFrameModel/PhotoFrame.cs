@@ -49,6 +49,16 @@ namespace FotoFrameModel
         ///     требованиям предметной области.
         /// </summary>
         bool IsValid { get; }
+
+        /// <summary>
+        /// Установить подложку для фоторамки.
+        /// </summary>
+        bool HasSubstrate { get; set; }
+
+        /// <summary>
+        /// Установить подставку(ножку) для фоторамки.
+        /// </summary>
+        bool HasStand { get; set; }
     }
 
 
@@ -369,6 +379,16 @@ namespace FotoFrameModel
                     nameof(OuterLength), "длины");
             }
         }
+
+        /// <summary>
+        /// Имеет ли фоторамка подложку.
+        /// </summary>
+        public bool HasSubstrate { get; set; }
+
+        /// <summary>
+        /// Имеется ли у фоторамки подставка(ножка).
+        /// </summary>
+        public bool HasStand { get; set; }
     }
 
 

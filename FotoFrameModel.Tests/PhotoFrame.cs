@@ -288,6 +288,25 @@ namespace FotoFrameModel.Tests
             Assert.AreEqual(expected, _photoFrame.IsValid);
         }
 
+        [Test(Description = "Check checkable params - " +
+            "substrate and stand of photo frame")]
+        [TestCase(true, true, TestName = "Substrate and stand checked")]
+        [TestCase(true, false, TestName = "Substrate checked")]
+        [TestCase(false, true, TestName = "Stand checked")]
+        [TestCase(false, false, TestName = "Substrate and stand is " +
+            "not checked")]
+        public void CheckCheckedParams(bool substrate, bool stand)
+        {
+            _photoFrame.HasSubstrate = substrate;
+            _photoFrame.HasStand = stand;
+
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(substrate, _photoFrame.HasSubstrate);
+                Assert.AreEqual(stand, _photoFrame.HasStand);
+            });
+        }
+
         /// <summary>
         /// Упаковать параметры фоторамки в список пар в виде
         ///     (название параметра, свойство параметра)
