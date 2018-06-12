@@ -128,8 +128,82 @@ namespace FotoFrameModel
                 return;
             }
 
+            GenerateSubstrate(photoFrame, part);
             GenerateBlockOnHeight(photoFrame, part);
             GenerateBlockOnWidth(photoFrame, part);
+        }
+
+        /// <summary>
+        /// Создает модель подложки фоторамки.
+        /// </summary>
+        /// <param name="photoFrame">Шаблон фоторамки</param>
+        /// <param name="part">Текущая сборка детали</param>
+        private void GenerateSubstrate(IPhotoFrame photoFrame,
+            ksPart part)
+        {
+            var basePlane = (ksEntity)part.GetDefaultEntity(
+                (short)Obj3dType.o3d_planeXOY);
+
+            var sketch = (ksEntity)part.NewEntity((short)Obj3dType.o3d_sketch);
+            if (sketch == null)
+            {
+                return;
+            }
+            sketch.name = "Эскиз подложки(стенки)";
+
+            var sketchDef = (ksSketchDefinition)sketch.GetDefinition();
+            if (sketchDef == null)
+            {
+                return;
+            }
+            sketchDef.SetPlane(basePlane);
+            sketch.Create();
+
+            var draw = (ksDocument2D)sketchDef.BeginEdit();
+
+            var offsetX = 0;
+            var offsetY = 0;
+            var dx = photoFrame.OuterWidth;
+
+            var Ax = _startX - offsetX;
+            var Ay = _startY - offsetY;
+
+            var Bx = Ax + dx;
+            var By = Ay - photoFrame.OuterHeight/10;
+
+            draw.ksLineSeg(Ax, Ay, Ax, By, 1);
+            draw.ksLineSeg(Ax, Ay, Bx, Ay, 1);
+            draw.ksLineSeg(Bx, Ay, Bx, By, 1);
+            draw.ksLineSeg(Ax, By, Bx, By, 1);
+
+            sketchDef.EndEdit();
+
+            var extr = (ksEntity)part.NewEntity(
+                (short)Obj3dType.o3d_bossExtrusion);
+            if (extr == null)
+            {
+                return;
+            }
+            extr.name = "Выдавить стенку по длине";
+
+            var extrDef = (ksBossExtrusionDefinition)extr.GetDefinition();
+            extrDef.SetSketch(sketch);
+            if (extrDef == null)
+            {
+                return;
+            }
+
+            extrDef.directionType = (short)Direction_Type.dtNormal;
+
+            var depthExtrusion = photoFrame.OuterLength;
+            var angle = 0.0f;
+            extrDef.SetSideParam(true,
+                                 (short)End_Type.etBlind,
+                                 depthExtrusion,
+                                 angle,
+                                 false);
+            extrDef.SetSketch(sketch);
+            extr.Create();
         }
 
         /// <summary>
