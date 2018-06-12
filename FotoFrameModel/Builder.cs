@@ -143,6 +143,99 @@ namespace FotoFrameModel
             GenerateSubstrate();
             GenerateBlockOnHeight();
             GenerateBlockOnWidth();
+            GenerateStand();
+        }
+
+        /// <summary>
+        /// Создает подставку(ножку) для фоторамки.
+        /// </summary>
+        private void GenerateStand()
+        {
+            var basePlane = (ksEntity)_part.GetDefaultEntity(
+               (short)Obj3dType.o3d_planeYOZ);
+
+            var sketch = (ksEntity)_part.NewEntity((short)Obj3dType.o3d_sketch);
+            if (sketch == null)
+            {
+                return;
+            }
+            sketch.name = "Эскиз подставки(ножки)";
+
+            var sketchDef = (ksSketchDefinition)sketch.GetDefinition();
+            if (sketchDef == null)
+            {
+                return;
+            }
+            sketchDef.SetPlane(basePlane);
+            sketch.Create();
+
+            var draw = (ksDocument2D)sketchDef.BeginEdit();
+
+            var katetA = _photoFrame.OuterWidth * 0.6 / 2;
+
+            //координаты начала подставки
+            var startX = _photoFrame.OuterWidth / 2.5;
+            startX = -startX;
+            var startY = 0;
+
+            var cx = startX;
+            var cy = startY;
+
+            //координаты точки "А" - "остриё" подставки
+            var ax = cx - katetA;
+            var ay = cy + _photoFrame.OuterLength;
+
+            var dBase = _photoFrame.OuterWidth * 0.3;
+
+            var dx = cx - dBase;
+            var dy = cy;
+
+            var ex = cx - katetA * 2;
+            var ey = ay - katetA;
+
+            var bx = cx;
+            var by = ey;
+
+            //порядок построения отрезков по точкам
+            //A->B
+            draw.ksLineSeg(ax, ay, bx, by, 1);
+            //B->C
+            draw.ksLineSeg(bx, by, cx, cy, 1);
+            //C->D
+            draw.ksLineSeg(cx, cy, dx, dy, 1);
+            //D->E
+            draw.ksLineSeg(dx, dy, ex, ey, 1);
+            //E->A
+            draw.ksLineSeg(ex, ey, ax, ay, 1);
+
+            sketchDef.EndEdit();
+
+            var extr = (ksEntity)_part.NewEntity(
+                (short)Obj3dType.o3d_bossExtrusion);
+            if (extr == null)
+            {
+                return;
+            }
+            extr.name = "Выдавить подставку";
+
+            var extrDef = (ksBossExtrusionDefinition)extr.GetDefinition();
+            extrDef.SetSketch(sketch);
+            if (extrDef == null)
+            {
+                return;
+            }
+
+            extrDef.directionType = (short)Direction_Type.dtNormal;
+
+            var depthExtrusion = _photoFrame.OuterHeight / 10;
+            var angle = 0.0f;
+            extrDef.SetSideParam(true,
+                (short)End_Type.etBlind,
+                depthExtrusion,
+                angle,
+                false);
+            extrDef.SetSketch(sketch);
+            extr.Create();
         }
 
         /// <summary>
