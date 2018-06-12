@@ -48,6 +48,16 @@ namespace FotoFrameModel
         private double _startY;
 
         /// <summary>
+        /// Текущая используемая сборка детали.
+        /// </summary>
+        private ksPart _part;
+
+        /// <summary>
+        /// Фоторамка для постройки модели.
+        /// </summary>
+        private IPhotoFrame _photoFrame;
+
+        /// <summary>
         /// Инициализация необходимых параметров для работы с Компас 3D
         /// </summary>
         public BuilderPhotoFrame()
@@ -119,32 +129,31 @@ namespace FotoFrameModel
             _startX = 0;
             _startY = _startX;
 
+            _photoFrame = photoFrame;
+
             var doc = (ksDocument3D)_kompas.Document3D();
             doc.Create();
 
-            var part = (ksPart)doc.GetPart((short)Part_Type.pTop_Part);
-            if (part == null)
+            _part = (ksPart)doc.GetPart((short)Part_Type.pTop_Part);
+            if (_part == null)
             {
                 return;
             }
 
-            GenerateSubstrate(photoFrame, part);
-            GenerateBlockOnHeight(photoFrame, part);
-            GenerateBlockOnWidth(photoFrame, part);
+            GenerateSubstrate();
+            GenerateBlockOnHeight();
+            GenerateBlockOnWidth();
         }
 
         /// <summary>
         /// Создает модель подложки фоторамки.
         /// </summary>
-        /// <param name="photoFrame">Шаблон фоторамки</param>
-        /// <param name="part">Текущая сборка детали</param>
-        private void GenerateSubstrate(IPhotoFrame photoFrame,
-            ksPart part)
+        private void GenerateSubstrate()
         {
-            var basePlane = (ksEntity)part.GetDefaultEntity(
+            var basePlane = (ksEntity)_part.GetDefaultEntity(
                 (short)Obj3dType.o3d_planeXOY);
 
-            var sketch = (ksEntity)part.NewEntity((short)Obj3dType.o3d_sketch);
+            var sketch = (ksEntity)_part.NewEntity((short)Obj3dType.o3d_sketch);
             if (sketch == null)
             {
                 return;
@@ -163,13 +172,13 @@ namespace FotoFrameModel
 
             var offsetX = 0;
             var offsetY = 0;
-            var dx = photoFrame.OuterWidth;
+            var dx = _photoFrame.OuterWidth;
 
             var Ax = _startX - offsetX;
             var Ay = _startY - offsetY;
 
             var Bx = Ax + dx;
-            var By = Ay - photoFrame.OuterHeight/10;
+            var By = Ay - _photoFrame.OuterHeight/10;
 
             draw.ksLineSeg(Ax, Ay, Ax, By, 1);
             draw.ksLineSeg(Ax, Ay, Bx, Ay, 1);
@@ -178,7 +187,7 @@ namespace FotoFrameModel
 
             sketchDef.EndEdit();
 
-            var extr = (ksEntity)part.NewEntity(
+            var extr = (ksEntity)_part.NewEntity(
                 (short)Obj3dType.o3d_bossExtrusion);
             if (extr == null)
             {
@@ -195,13 +204,13 @@ namespace FotoFrameModel
 
             extrDef.directionType = (short)Direction_Type.dtNormal;
 
-            var depthExtrusion = photoFrame.OuterLength;
+            var depthExtrusion = _photoFrame.OuterLength;
             var angle = 0.0f;
             extrDef.SetSideParam(true,
-                                 (short)End_Type.etBlind,
-                                 depthExtrusion,
-                                 angle,
-                                 false);
+                (short)End_Type.etBlind,
+                depthExtrusion,
+                angle,
+                false);
             extrDef.SetSketch(sketch);
             extr.Create();
         }
@@ -209,15 +218,13 @@ namespace FotoFrameModel
         /// <summary>
         /// Создает модели брусков сторон фоторамки по внешней высоте
         /// </summary>
-        /// <param name="photoFrame">Шаблон фоторамки</param>
-        /// <param name="part">Текущая сборка детали</param>
-        private void GenerateBlockOnHeight(IPhotoFrame photoFrame,
-            ksPart part)
+        private void GenerateBlockOnHeight()
         {
-            var basePlane = (ksEntity)part.GetDefaultEntity(
+            var basePlane = (ksEntity)_part.GetDefaultEntity(
                 (short)Obj3dType.o3d_planeXOY);
 
-            var sketch = (ksEntity)part.NewEntity((short)Obj3dType.o3d_sketch);
+            var sketch = (ksEntity)_part.NewEntity(
+                (short)Obj3dType.o3d_sketch);
             if (sketch == null)
             {
                 return;
@@ -236,13 +243,13 @@ namespace FotoFrameModel
 
             var offsetX = 0;
             var offsetY = 0;
-            var dx = photoFrame.OuterWidth;
+            var dx = _photoFrame.OuterWidth;
 
-            DrawSketchBlock(photoFrame, draw, offsetX, offsetY, dx);
+            DrawSketchBlock(draw, offsetX, offsetY, dx);
 
             sketchDef.EndEdit();
 
-            var extr = (ksEntity)part.NewEntity(
+            var extr = (ksEntity)_part.NewEntity(
                 (short)Obj3dType.o3d_bossExtrusion);
             if (extr == null)
             {
@@ -259,13 +266,13 @@ namespace FotoFrameModel
 
             extrDef.directionType = (short)Direction_Type.dtNormal;
 
-            var depthExtrusion = photoFrame.OuterLength;
+            var depthExtrusion = _photoFrame.OuterLength;
             var angle = 0.0f;
             extrDef.SetSideParam(true,
-                                 (short)End_Type.etBlind,
-                                 depthExtrusion,
-                                 angle,
-                                 false);
+                (short)End_Type.etBlind,
+                depthExtrusion,
+                angle,
+                false);
             extrDef.SetSketch(sketch);
             extr.Create();             
         }
@@ -273,14 +280,12 @@ namespace FotoFrameModel
         /// <summary>
         /// Создает модели брусков сторон фоторамки по внешней высоте
         /// </summary>
-        /// <param name="photoFrame">Шаблон фоторамки</param>
-        /// <param name="part">Текущая сборка детали</param>
-        private void GenerateBlockOnWidth(IPhotoFrame photoFrame, ksPart part)
+        private void GenerateBlockOnWidth()
         {
-            var basePlane = (ksEntity)part.GetDefaultEntity(
+            var basePlane = (ksEntity)_part.GetDefaultEntity(
                 (short)Obj3dType.o3d_planeYOZ);
 
-            var sketch = (ksEntity)part.NewEntity((short)Obj3dType.o3d_sketch);
+            var sketch = (ksEntity)_part.NewEntity((short)Obj3dType.o3d_sketch);
             if (sketch == null)
             {
                 return;
@@ -298,15 +303,15 @@ namespace FotoFrameModel
             var draw = (ksDocument2D)sketchDef.BeginEdit();
 
 
-            var offsetX = photoFrame.OuterLength;
-            var offsetY = photoFrame.OuterHeight;
-            var dx = photoFrame.OuterLength;
+            var offsetX = _photoFrame.OuterLength;
+            var offsetY = _photoFrame.OuterHeight;
+            var dx = _photoFrame.OuterLength;
 
-            DrawSketchBlock(photoFrame, draw, offsetX, offsetY, dx);
+            DrawSketchBlock(draw, offsetX, offsetY, dx);
 
             sketchDef.EndEdit();
 
-            var extr = (ksEntity)part.NewEntity(
+            var extr = (ksEntity)_part.NewEntity(
                 (short)Obj3dType.o3d_bossExtrusion);
             if (extr == null)
             {
@@ -323,7 +328,7 @@ namespace FotoFrameModel
 
             extrDef.directionType = (short)Direction_Type.dtReverse;
 
-            var depthExtrusion = photoFrame.OuterWidth;
+            var depthExtrusion = _photoFrame.OuterWidth;
             var angle = 0.0f;
             extrDef.SetSideParam(false,
                                  (short)End_Type.etBlind,
@@ -337,18 +342,17 @@ namespace FotoFrameModel
         /// <summary>
         /// Нарисовать эскиз двух зеркальных блоков для фоторамки.
         /// </summary>
-        /// <param name="photoFrame">Шаблон фоторамки.</param>
         /// <param name="draw">Документ эскиза.</param>
         /// <param name="offsetX">Смещение по OX для начальной точки.</param>
         /// <param name="offsetY">Смещение по OY для начальной точки.</param>
         /// <param name="dx">Расстояние между начальными точками по OX
         ///     отрисовки брусков.</param>
-        private void DrawSketchBlock(IPhotoFrame photoFrame,
-            ksDocument2D draw, double offsetX, double offsetY, double dx)
+        private void DrawSketchBlock(ksDocument2D draw,
+            double offsetX, double offsetY, double dx)
         {
-            var h1 = photoFrame.OuterHeight;
-            var h2 = photoFrame.InnerHeight;
-            var h = photoFrame.Interval;
+            var h1 = _photoFrame.OuterHeight;
+            var h2 = _photoFrame.InnerHeight;
+            var h = _photoFrame.Interval;
             /* Блок для фоторамки представляет собой трапецию, 
              *      либо в частном случае квадрат.
              *          B
