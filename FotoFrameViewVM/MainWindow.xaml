@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FotoFrameViewVM"
         mc:Ignorable="d"
+        SizeToContent="Height"
         Title="Построитель фоторамок" Height="250" Width="260" ResizeMode="NoResize">
     <Window.Resources>
         <local:PhotoFrameViewModel x:Key="PhotoFrame"/>
@@ -109,6 +110,12 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
+        </HeaderedContentControl>
+        <HeaderedContentControl Header="Установить подложку(стенку):">
+            <CheckBox IsChecked="{Binding HasSubstrate}" Width="40"/>
+        </HeaderedContentControl>
+        <HeaderedContentControl Header="Установить подставку(ножку):">
+            <CheckBox IsChecked="{Binding HasStand}" Width="40"/>
         </HeaderedContentControl>
 
         <Button IsDefault="True" Click="Button_Click">Построить</Button>

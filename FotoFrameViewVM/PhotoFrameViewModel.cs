@@ -143,6 +143,38 @@ namespace FotoFrameViewVM
         }
 
         /// <summary>
+        /// Установить подставку для фоторамки.
+        /// </summary>
+        public bool HasStand
+        {
+            get
+            {
+                return _photoFrame.HasStand;
+            }
+            set
+            {
+                _photoFrame.HasStand = value;
+                OnPropertyChanged(nameof(this.HasStand));
+            }
+        }
+
+        /// <summary>
+        /// Установить подложку для фоторамки.
+        /// </summary>
+        public bool HasSubstrate
+        {
+            get
+            {
+                return _photoFrame.HasSubstrate;
+            }
+            set
+            {
+                _photoFrame.HasSubstrate = value;
+                OnPropertyChanged(nameof(this.HasSubstrate));
+            }
+        }
+
+        /// <summary>
         /// Построить модель фоторамки по шаблонки.
         /// </summary>
         /// <returns>Возвращает удалось 

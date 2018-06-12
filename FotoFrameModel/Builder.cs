@@ -163,10 +163,18 @@ namespace FotoFrameModel
                 return;
             }
 
-            GenerateSubstrate();
+            if (_photoFrame.HasSubstrate)
+            {
+                GenerateSubstrate();
+            }
+            
             GenerateBlockOnHeight();
             GenerateBlockOnWidth();
-            GenerateStand();
+
+            if (_photoFrame.HasStand)
+            {
+                GenerateStand();
+            }
         }
 
         /// <summary>
